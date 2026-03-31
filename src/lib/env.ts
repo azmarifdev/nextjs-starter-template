@@ -9,6 +9,10 @@ const optionalString = z.preprocess(
   (value) => (value === "" ? undefined : value),
   z.string().optional()
 );
+const appName = z.preprocess(
+  (value) => (value === "" || value == null ? undefined : value),
+  z.string().min(1).default("Nextjs Starter Template")
+);
 
 export const env = createEnv({
   server: {
@@ -20,7 +24,7 @@ export const env = createEnv({
     STRIPE_SECRET_KEY: optionalString
   },
   client: {
-    NEXT_PUBLIC_APP_NAME: z.string().min(1),
+    NEXT_PUBLIC_APP_NAME: appName,
     NEXT_PUBLIC_API_BASE_URL: optionalString,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: optionalString
   },
