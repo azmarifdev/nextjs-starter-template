@@ -62,15 +62,8 @@ jobs:
     if: github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'master' || github.ref_name == 'develop')
     env:
       NEXT_PUBLIC_APP_NAME: Nextjs Starter Template
-      APP_URL: ${{ secrets.APP_URL }}
-      GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
-      GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
       NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-      NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY }}
-      STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-      STRIPE_SUBSCRIPTION_PRICE_ID: ${{ secrets.STRIPE_SUBSCRIPTION_PRICE_ID }}
-      STRIPE_WEBHOOK_SECRET_KEY: ${{ secrets.STRIPE_WEBHOOK_SECRET_KEY }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
