@@ -41,12 +41,11 @@ jobs:
         if: steps.dep-changes.outputs.any_changed == 'true'
         id: dependency_review
         continue-on-error: true
+        timeout-minutes: 2
         uses: actions/dependency-review-action@v4
         with:
-          # GitHub can take a short time to generate dependency snapshots
-          # for new commits; retrying avoids transient "No snapshots found" failures.
-          retry-on-snapshot-warnings: true
-          retry-on-snapshot-warnings-timeout: 120
+          # Fast-fail to avoid long waiting loops when snapshot is unavailable.
+          retry-on-snapshot-warnings: false
           # Keep PRs unblocked when dependency snapshot generation is delayed.
           warn-only: true
 
