@@ -24,10 +24,11 @@ This repository is designed so a team can:
 - [11. Testing Strategy](#11-testing-strategy)
 - [12. GitHub Automation Overview](#12-github-automation-overview)
 - [13. Manual GitHub Setup (Required)](#13-manual-github-setup-required)
-- [14. Common Problems and Manual Fixes](#14-common-problems-and-manual-fixes)
-- [15. Safe Push and Release Demo](#15-safe-push-and-release-demo)
-- [16. Contribution Guidelines](#16-contribution-guidelines)
-- [17. Additional Documents](#17-additional-documents)
+- [14. AI Assistant Instructions (Optional but Recommended)](#14-ai-assistant-instructions-optional-but-recommended)
+- [15. Common Problems and Manual Fixes](#15-common-problems-and-manual-fixes)
+- [16. Safe Push and Release Demo](#16-safe-push-and-release-demo)
+- [17. Contribution Guidelines](#17-contribution-guidelines)
+- [18. Additional Documents](#18-additional-documents)
 
 ## 1. What This Template Provides
 
@@ -312,7 +313,23 @@ Important note:
 - Enable `Automatically delete head branches`.
 - Keep only one merge strategy (usually squash merge).
 
-## 14. Common Problems and Manual Fixes
+## 14. AI Assistant Instructions (Optional but Recommended)
+
+To improve output quality from coding agents, this template includes project-specific AI guidance files:
+
+- `.claude/CLAUDE.md`: high-level engineering rules and validation flow.
+- `.cursor/rules/project-agent.mdc`: Cursor rule file with repository-specific constraints.
+
+Why this helps:
+
+- reduces generic AI output
+- keeps changes aligned with your architecture
+- reminds agents to run the same quality gates as CI
+- improves consistency across contributors using different AI tools
+
+If your team does not use AI coding tools, these files are harmless and can be ignored.
+
+## 15. Common Problems and Manual Fixes
 
 ### Problem A: Release Please cannot create PR
 
@@ -365,7 +382,7 @@ Fix checklist:
 2. Verify PR title is semantic (separate workflow requirement).
 3. Push updated commit/title and re-run failed jobs.
 
-## 15. Safe Push and Release Demo
+## 16. Safe Push and Release Demo
 
 ### 15.1 Standard safe push flow
 
@@ -397,7 +414,7 @@ Then open PR to `main`.
 - merge release PR
 - version + tag + changelog + GitHub release notes generated automatically
 
-## 16. Contribution Guidelines
+## 17. Contribution Guidelines
 
 ### Commit message format
 
@@ -424,9 +441,15 @@ Common `type` values:
 
 For full details, see [`CONTRIBUTING.md`](./CONTRIBUTING.md).
 
-## 17. Additional Documents
+## 18. Additional Documents
 
 - Contribution policy: [`CONTRIBUTING.md`](./CONTRIBUTING.md)
 - Manual GitHub setup checklist: [`GITHUB_SETUP_CHECKLIST.md`](./GITHUB_SETUP_CHECKLIST.md)
 - Commit examples: [`.github-commit-message-examples.txt`](./.github-commit-message-examples.txt)
 - Changelog: [`CHANGELOG.md`](./CHANGELOG.md)
+- Cross-agent guide: [`AGENTS.md`](./AGENTS.md)
+- Claude AI guide: [`.claude/CLAUDE.md`](./.claude/CLAUDE.md)
+- Cursor rules: [`.cursor/rules/project-agent.mdc`](./.cursor/rules/project-agent.mdc)
+- Windsurf rules: [`.windsurf/rules/project-guidelines.md`](./.windsurf/rules/project-guidelines.md)
+- Copilot instructions: [`.vscode/copilot-instructions.md`](./.vscode/copilot-instructions.md)
+- Kiro steering: [`.kiro/steering/product.md`](./.kiro/steering/product.md), [`.kiro/steering/tech.md`](./.kiro/steering/tech.md), [`.kiro/steering/structure.md`](./.kiro/steering/structure.md), [`.kiro/steering/code-quality.md`](./.kiro/steering/code-quality.md)
