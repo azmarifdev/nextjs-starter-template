@@ -1,3 +1,5 @@
 module.exports = {
-  extends: ["@commitlint/config-conventional"]
+  extends: ["@commitlint/config-conventional"],
+  defaultIgnores: true,
+  ignores: [(message) => message.startsWith("Merge ")]
 };

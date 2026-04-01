@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const { rmSync } = require("node:fs");
+import { rmSync } from "node:fs";
 
 const paths = [".next", "coverage", "dist", "storybook-static", "tsconfig.tsbuildinfo"];
 
