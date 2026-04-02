@@ -4,7 +4,7 @@
     "logout": "Logout"
   },
   "home": {
-    "title": "Next Starter Template",
-    "subtitle": "A scalable Next.js starter with feature modules and production tooling."
+    "title": "Nextjs Starter Template",
+    "subtitle": "A production-ready Next.js starter template for SaaS, dashboards, and modern web apps."
   }
 }

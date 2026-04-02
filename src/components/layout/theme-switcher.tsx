@@ -1,20 +1,21 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
+import { useAppTheme } from "@/providers/ThemeProvider";
 
 export function ThemeSwitcher() {
-  const { resolvedTheme, setTheme } = useTheme();
+  const { theme, setTheme } = useAppTheme();
 
   const toggleTheme = (): void => {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
     <Button variant="secondary" onClick={toggleTheme} aria-label="Toggle theme">
-      {resolvedTheme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+      <Sun size={16} className="theme-icon-sun" />
+      <Moon size={16} className="theme-icon-moon" />
     </Button>
   );
 }
