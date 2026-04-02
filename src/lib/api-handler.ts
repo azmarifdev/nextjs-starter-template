@@ -1,4 +1,5 @@
 import { apiError, resolveRequestId } from "@/lib/api-response";
+import { validateRuntimeConfig } from "@/lib/config/validate";
 import { logger } from "@/lib/observability/logger";
 
 export function withApiHandler<TRequest extends Request>(
@@ -9,6 +10,7 @@ export function withApiHandler<TRequest extends Request>(
     const requestId = resolveRequestId(request.headers);
 
     try {
+      validateRuntimeConfig();
       return await handler(request);
     } catch (error) {
       logger.error("api:unhandled", {

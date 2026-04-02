@@ -2,8 +2,16 @@ import { appConfig } from "@/lib/config/app-config";
 import type { Permission, UserRole } from "@/types/auth";
 
 const ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
-  admin: ["dashboard:read", "users:read", "projects:read", "tasks:read", "auth:manage"],
-  user: ["dashboard:read", "projects:read", "tasks:read"]
+  admin: [
+    "dashboard:read",
+    "users:read",
+    "projects:read",
+    "tasks:read",
+    "ecommerce:read",
+    "billing:read",
+    "auth:manage"
+  ],
+  user: ["dashboard:read", "projects:read", "tasks:read", "ecommerce:read", "billing:read"]
 };
 
 export function getRolePermissions(role: UserRole): Permission[] {

@@ -1,3 +1,5 @@
+import type { BillingSummary } from "@/modules/billing/types";
+import type { EcommerceSummary } from "@/modules/ecommerce/types";
 import type { ProjectItem } from "@/modules/project/types";
 import type { TaskItem } from "@/modules/task/types";
 import type { UserListItem } from "@/modules/user/types";
@@ -29,6 +31,16 @@ const tasks: TaskItem[] = [
   }
 ];
 
+const ecommerceSummary: EcommerceSummary = {
+  orders: 128,
+  revenue: 24120
+};
+
+const billingSummary: BillingSummary = {
+  activePlans: 43,
+  mrr: 12800
+};
+
 export function listDemoUsers(): UserListItem[] {
   return users;
 }
@@ -39,4 +51,12 @@ export function listDemoProjects(): ProjectItem[] {
 
 export function listDemoTasks(): TaskItem[] {
   return tasks;
+}
+
+export function getDemoEcommerceSummary(): EcommerceSummary {
+  return ecommerceSummary;
+}
+
+export function getDemoBillingSummary(): BillingSummary {
+  return billingSummary;
 }

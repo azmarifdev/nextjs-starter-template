@@ -1,13 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireInternalBackend } from "@/lib/api/internal-backend";
+import { requireCustomAuthProvider, requireInternalBackend } from "@/lib/api/internal-backend";
 import { withApiHandler } from "@/lib/api-handler";
 import { apiError, apiSuccess, resolveRequestId } from "@/lib/api-response";
+import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
 import {
+  AuthEmailExistsError,
   createAuthUser,
   findAuthUserByEmail,
   isAuthDatabaseConfigured
 } from "@/lib/auth-user.repository";
+import { appConfig } from "@/lib/config/app-config";
 import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/constants";
 import { setRequestIdHeader } from "@/lib/observability/request-id";
 import { withTrace } from "@/lib/observability/tracing";
@@ -23,12 +26,8 @@ function prefersHtmlResponse(request: NextRequest): boolean {
 }
 
 function buildRedirectUrl(request: NextRequest, path: string): URL {
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? request.nextUrl.host;
-  const protocol =
-    request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
-
-  return new URL(path, `${protocol}://${host}`);
+  const originHeader = request.headers.get("origin");
+  return new URL(path, originHeader ?? request.nextUrl.origin);
 }
 
 function redirectWithRequestId(
@@ -66,12 +65,24 @@ async function parsePayload(request: NextRequest): Promise<unknown> {
   return request.json().catch(() => null);
 }
 
+function getRegistrationUnavailableMessage(): string {
+  if (appConfig.dbProvider === "mongo") {
+    return "Registration is unavailable. Configure MONGODB_URI and MONGODB_DB_NAME first.";
+  }
+
+  return "Registration is unavailable. Configure DATABASE_URL first.";
+}
+
 async function registerHandler(request: NextRequest): Promise<Response> {
   const requestId = resolveRequestId(request.headers);
   const route = "/api/v1/auth/register";
   const backendError = requireInternalBackend({ requestId, route });
   if (backendError) {
     return backendError;
+  }
+  const providerError = requireCustomAuthProvider({ requestId, route });
+  if (providerError) {
+    return providerError;
   }
   const wantsHtml = prefersHtmlResponse(request);
   const successRedirectPath = getSafeRedirectPath(request.nextUrl.searchParams.get("redirect"));
@@ -92,7 +103,7 @@ async function registerHandler(request: NextRequest): Promise<Response> {
         return apiError(
           {
             code: "AUTH_UNAVAILABLE",
-            message: "Registration is unavailable. Configure DATABASE_URL first."
+            message: getRegistrationUnavailableMessage()
           },
           { status: 503, requestId, route }
         );
@@ -125,12 +136,28 @@ async function registerHandler(request: NextRequest): Promise<Response> {
       }
 
       const passwordHash = await hashPassword(parsed.data.password);
-      const createdUser = await createAuthUser({
-        name: parsed.data.name,
-        email: parsed.data.email,
-        passwordHash,
-        role: "user"
-      });
+      let createdUser;
+      try {
+        createdUser = await createAuthUser({
+          name: parsed.data.name,
+          email: parsed.data.email,
+          passwordHash,
+          role: "user"
+        });
+      } catch (error) {
+        if (error instanceof AuthEmailExistsError) {
+          if (wantsHtml) {
+            return redirectWithRequestId(request, "/register?error=email_exists", requestId);
+          }
+
+          return apiError(
+            { code: "EMAIL_EXISTS", message: "Email already exists" },
+            { status: 409, requestId, route }
+          );
+        }
+
+        throw error;
+      }
 
       const user = {
         id: createdUser.id,
@@ -149,7 +176,7 @@ async function registerHandler(request: NextRequest): Promise<Response> {
 
       response.cookies.set(AUTH_COOKIE_NAME, token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: shouldUseSecureCookies(),
         sameSite: "strict",
         path: "/",
         maxAge: AUTH_SESSION_TTL_SECONDS

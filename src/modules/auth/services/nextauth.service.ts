@@ -11,8 +11,10 @@ function mapSessionUser(sessionUser: {
   email?: string | null;
   role?: "admin" | "user";
 }): User {
+  const fallbackId = sessionUser.email ?? sessionUser.name ?? "nextauth-user";
+
   return {
-    id: sessionUser.id ?? crypto.randomUUID(),
+    id: sessionUser.id ?? fallbackId,
     name: sessionUser.name ?? "Unknown User",
     email: sessionUser.email ?? "unknown@example.com",
     role: sessionUser.role === "admin" ? "admin" : "user"

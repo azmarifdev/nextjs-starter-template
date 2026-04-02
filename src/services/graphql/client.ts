@@ -1,4 +1,4 @@
-import { getGraphqlEndpoint } from "@/lib/config/runtime";
+import { assertExternalApiBaseUrlConfigured, getGraphqlEndpoint } from "@/lib/config/runtime";
 import { ApiClientError } from "@/lib/errors/api-error";
 
 interface GraphqlError {
@@ -14,6 +14,7 @@ export async function graphqlRequest<TData, TVariables = Record<string, unknown>
   query: string,
   variables?: TVariables
 ): Promise<TData> {
+  assertExternalApiBaseUrlConfigured();
   const response = await fetch(getGraphqlEndpoint(), {
     method: "POST",
     credentials: "include",

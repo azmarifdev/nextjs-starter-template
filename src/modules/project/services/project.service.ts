@@ -4,6 +4,18 @@ import { apiClient } from "@/services/apiClient";
 
 export const projectService = {
   async listProjects(): Promise<ProjectItem[]> {
-    return apiClient.get<ProjectItem[]>(`${API_PREFIX}/projects`);
+    return apiClient.get<ProjectItem[]>(
+      `${API_PREFIX}/projects`,
+      `
+      query Projects {
+        projects {
+          id
+          name
+          owner
+          status
+        }
+      }
+      `
+    );
   }
 };

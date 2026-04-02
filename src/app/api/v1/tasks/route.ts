@@ -2,7 +2,7 @@ import { requireInternalBackend } from "@/lib/api/internal-backend";
 import { withApiHandler } from "@/lib/api-handler";
 import { apiSuccess, resolveRequestId } from "@/lib/api-response";
 import { requirePermission, requireSession } from "@/lib/auth/session-guard";
-import { listDemoTasks } from "@/lib/demo-data";
+import { tasksRepository } from "@/lib/repositories/tasks.repository";
 
 async function tasksHandler(request: Request): Promise<Response> {
   const requestId = resolveRequestId(request.headers);
@@ -22,7 +22,8 @@ async function tasksHandler(request: Request): Promise<Response> {
     return permissionError;
   }
 
-  return apiSuccess(listDemoTasks(), { requestId });
+  const tasks = await tasksRepository.list();
+  return apiSuccess(tasks, { requestId });
 }
 
 export const GET = withApiHandler("/api/v1/tasks", tasksHandler);

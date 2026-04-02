@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
 import { hasPermission } from "@/lib/auth/rbac";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
+import { findFeatureByPath } from "@/lib/config/feature-registry";
+import { validateRuntimeConfig } from "@/lib/config/validate";
 import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import {
   getOrCreateRequestId,
@@ -10,17 +13,24 @@ import {
 } from "@/lib/observability/request-id";
 import { verifySessionToken } from "@/lib/session";
 
-const protectedRoutes = ["/dashboard", "/projects", "/tasks", "/users"];
+const protectedRoutes = ["/dashboard", "/projects", "/tasks", "/ecommerce", "/billing", "/users"];
 const authRoutes = ["/login", "/register"];
 
 const routePermissions: Record<
   string,
-  "dashboard:read" | "users:read" | "projects:read" | "tasks:read"
+  | "dashboard:read"
+  | "users:read"
+  | "projects:read"
+  | "tasks:read"
+  | "ecommerce:read"
+  | "billing:read"
 > = {
   "/dashboard": "dashboard:read",
   "/users": "users:read",
   "/projects": "projects:read",
-  "/tasks": "tasks:read"
+  "/tasks": "tasks:read",
+  "/ecommerce": "ecommerce:read",
+  "/billing": "billing:read"
 };
 
 function attachRequestId(response: NextResponse, requestId: string): NextResponse {
@@ -29,14 +39,16 @@ function attachRequestId(response: NextResponse, requestId: string): NextRespons
 }
 
 function isRouteFeatureDisabled(pathname: string): boolean {
-  if (pathname === "/users" || pathname.startsWith("/users/")) {
-    return !isFeatureEnabled("admin");
+  const feature = findFeatureByPath(pathname);
+  if (feature) {
+    return !isFeatureEnabled(feature.key);
   }
 
   return false;
 }
 
 export async function proxy(request: NextRequest) {
+  validateRuntimeConfig();
   const requestId = getOrCreateRequestId(request.headers);
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(REQUEST_ID_HEADER, requestId);
@@ -79,7 +91,7 @@ export async function proxy(request: NextRequest) {
     const response = NextResponse.next({ request: { headers: requestHeaders } });
     response.cookies.set(AUTH_COOKIE_NAME, "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: shouldUseSecureCookies(),
       sameSite: "strict",
       expires: new Date(0),
       path: "/"
@@ -95,6 +107,8 @@ export const config = {
     "/dashboard/:path*",
     "/projects/:path*",
     "/tasks/:path*",
+    "/ecommerce/:path*",
+    "/billing/:path*",
     "/users/:path*",
     "/login",
     "/register",

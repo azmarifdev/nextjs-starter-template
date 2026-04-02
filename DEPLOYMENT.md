@@ -100,14 +100,7 @@ Use this path for health checks:
 ## 8) Package Manager Notes
 
 Default CI manager is `npm` for stability.
-
-Optional install paths:
-
-```bash
-npm run install:yarn
-npm run install:pnpm
-npm run install:bun
-```
+This template is npm-only by default and commits only `package-lock.json`.
 
 If switching manager on same machine:
 

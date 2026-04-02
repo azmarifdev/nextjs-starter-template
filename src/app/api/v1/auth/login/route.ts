@@ -1,14 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireInternalBackend } from "@/lib/api/internal-backend";
+import { requireCustomAuthProvider, requireInternalBackend } from "@/lib/api/internal-backend";
 import { withApiHandler } from "@/lib/api-handler";
 import { apiError, apiSuccess, resolveRequestId } from "@/lib/api-response";
+import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
 import {
   findAuthUserByEmail,
   isAuthDatabaseConfigured,
   recordFailedLoginAttempt,
   resetFailedLoginAttempts
 } from "@/lib/auth-user.repository";
+import { appConfig } from "@/lib/config/app-config";
 import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/constants";
 import { tryDevAuthLogin } from "@/lib/dev-auth-fallback";
 import { logger } from "@/lib/observability/logger";
@@ -34,12 +36,8 @@ function prefersHtmlResponse(request: NextRequest): boolean {
 }
 
 function buildRedirectUrl(request: NextRequest, path: string): URL {
-  const host =
-    request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? request.nextUrl.host;
-  const protocol =
-    request.headers.get("x-forwarded-proto") ?? request.nextUrl.protocol.replace(":", "");
-
-  return new URL(path, `${protocol}://${host}`);
+  const originHeader = request.headers.get("origin");
+  return new URL(path, originHeader ?? request.nextUrl.origin);
 }
 
 function redirectWithRequestId(
@@ -76,6 +74,14 @@ async function parsePayload(request: NextRequest): Promise<unknown> {
   return request.json().catch(() => null);
 }
 
+function getAuthUnavailableMessage(): string {
+  if (appConfig.dbProvider === "mongo") {
+    return "Authentication is unavailable. Configure MONGODB_URI and MONGODB_DB_NAME first.";
+  }
+
+  return "Authentication is unavailable. Configure DATABASE_URL first.";
+}
+
 async function loginHandler(request: NextRequest): Promise<Response> {
   const requestId = resolveRequestId(request.headers);
   const route = "/api/v1/auth/login";
@@ -83,25 +89,16 @@ async function loginHandler(request: NextRequest): Promise<Response> {
   if (backendError) {
     return backendError;
   }
+  const providerError = requireCustomAuthProvider({ requestId, route });
+  if (providerError) {
+    return providerError;
+  }
   const wantsHtml = prefersHtmlResponse(request);
   const successRedirectPath = getSafeRedirectPath(request.nextUrl.searchParams.get("redirect"));
 
   const originError = requireSameOrigin(request, { requestId, route });
   if (originError) {
     return originError;
-  }
-
-  const sourceIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-  const loginRateLimit = consumeRateLimit(`auth:login:${sourceIp}`, AUTH_RATE_LIMIT);
-  if (!loginRateLimit.allowed) {
-    const message = "Too many attempts. Please retry in a minute.";
-    if (wantsHtml) {
-      return redirectWithRequestId(request, "/login?error=rate_limited", requestId);
-    }
-
-    const response = apiError({ code: "RATE_LIMITED", message }, { status: 429, requestId, route });
-    attachRateLimitHeaders(response, loginRateLimit, AUTH_RATE_LIMIT.limit);
-    return response;
   }
 
   return withTrace(
@@ -118,7 +115,7 @@ async function loginHandler(request: NextRequest): Promise<Response> {
         return apiError(
           {
             code: "AUTH_UNAVAILABLE",
-            message: "Authentication is unavailable. Configure DATABASE_URL first."
+            message: getAuthUnavailableMessage()
           },
           { status: 503, requestId, route }
         );
@@ -126,6 +123,22 @@ async function loginHandler(request: NextRequest): Promise<Response> {
 
       const payload = await parsePayload(request);
       const parsed = loginSchema.safeParse(payload);
+      const rateLimitIdentity = parsed.success ? parsed.data.email.toLowerCase() : "invalid";
+      const loginRateLimit = consumeRateLimit(`auth:login:${rateLimitIdentity}`, AUTH_RATE_LIMIT);
+
+      if (!loginRateLimit.allowed) {
+        const message = "Too many attempts. Please retry in a minute.";
+        if (wantsHtml) {
+          return redirectWithRequestId(request, "/login?error=rate_limited", requestId);
+        }
+
+        const response = apiError(
+          { code: "RATE_LIMITED", message },
+          { status: 429, requestId, route }
+        );
+        attachRateLimitHeaders(response, loginRateLimit, AUTH_RATE_LIMIT.limit);
+        return response;
+      }
 
       if (!parsed.success) {
         if (wantsHtml) {
@@ -215,7 +228,7 @@ async function loginHandler(request: NextRequest): Promise<Response> {
 
       response.cookies.set(AUTH_COOKIE_NAME, token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: shouldUseSecureCookies(),
         sameSite: "strict",
         path: "/",
         maxAge: AUTH_SESSION_TTL_SECONDS

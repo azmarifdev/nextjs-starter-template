@@ -1,12 +1,19 @@
-import { assertFeatureEnabled } from "@/lib/config/feature-flags";
+import { API_PREFIX } from "@/lib/constants";
 import type { BillingSummary } from "@/modules/billing/types";
+import { apiClient } from "@/services/apiClient";
 
 export const billingService = {
   async summary(): Promise<BillingSummary> {
-    assertFeatureEnabled("billing");
-    return {
-      activePlans: 0,
-      mrr: 0
-    };
+    return apiClient.get<BillingSummary>(
+      `${API_PREFIX}/billing/summary`,
+      `
+      query BillingSummary {
+        billingSummary {
+          activePlans
+          mrr
+        }
+      }
+      `
+    );
   }
 };

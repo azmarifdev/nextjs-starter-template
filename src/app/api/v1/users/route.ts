@@ -1,9 +1,9 @@
 import { requireInternalBackend } from "@/lib/api/internal-backend";
 import { withApiHandler } from "@/lib/api-handler";
-import { apiSuccess, resolveRequestId } from "@/lib/api-response";
+import { apiError, apiSuccess, resolveRequestId } from "@/lib/api-response";
 import { requirePermission, requireSession } from "@/lib/auth/session-guard";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
-import { listDemoUsers } from "@/lib/demo-data";
+import { usersRepository } from "@/lib/repositories/users.repository";
 
 async function usersHandler(request: Request): Promise<Response> {
   const requestId = resolveRequestId(request.headers);
@@ -13,7 +13,13 @@ async function usersHandler(request: Request): Promise<Response> {
     return backendError;
   }
   if (!isFeatureEnabled("admin")) {
-    return apiSuccess([], { requestId });
+    return apiError(
+      {
+        code: "FEATURE_DISABLED",
+        message: "Admin feature is disabled"
+      },
+      { status: 404, requestId, route }
+    );
   }
 
   const { session, response } = await requireSession({ request, requestId, route });
@@ -26,7 +32,8 @@ async function usersHandler(request: Request): Promise<Response> {
     return permissionError;
   }
 
-  return apiSuccess(listDemoUsers(), { requestId });
+  const users = await usersRepository.list();
+  return apiSuccess(users, { requestId });
 }
 
 export const GET = withApiHandler("/api/v1/users", usersHandler);

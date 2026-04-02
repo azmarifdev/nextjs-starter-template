@@ -27,6 +27,7 @@ export const appConfig = {
 - `src/services/*`: transport and API client layer (`rest/`, `graphql/`, orchestration client).
 - `src/lib/*`: system internals (config, db providers, auth internals, security, observability).
 - `src/providers/*`: global React providers (theme, query, auth, state, toast).
+- `src/lib/repositories/*`: data-access abstraction used by internal API handlers.
 
 ## Data Flow
 
@@ -67,6 +68,18 @@ Feature toggles are controlled by `appConfig.features` and enforced in:
 - Route proxy/middleware checks.
 - API handlers.
 
+Feature metadata is centralized in `src/lib/config/feature-registry.ts`.
+
+## Runtime Config Validation
+
+The app performs startup validation through `src/lib/config/validate.ts`.
+
+- `app/layout.tsx` validates on app boot.
+- `withApiHandler` validates on API execution.
+- `proxy.ts` validates before route guard logic.
+
+Validation is strict for incompatible internal mode settings and test-safe for automated tests.
+
 ## Error Handling
 
 - Unified API response envelope (`ApiResponse<T>`).
@@ -79,3 +92,4 @@ Feature toggles are controlled by `appConfig.features` and enforced in:
 - Unit and integration: Vitest.
 - End-to-end: Playwright.
 - Jest removed.
+- CI mode matrix validates multiple config combinations (backend/api/auth permutations).

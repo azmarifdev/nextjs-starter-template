@@ -4,9 +4,11 @@ import { getTranslations } from "next-intl/server";
 
 import { LangSwitcher } from "@/components/layout/lang-switcher";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
+import { appConfig } from "@/lib/config/app-config";
 
 export default async function HomePage() {
   const t = await getTranslations("home");
+  const getStartedHref = appConfig.authProvider === "nextauth" ? "/login" : "/register";
 
   return (
     <main className="landing-wrap">
@@ -36,7 +38,7 @@ export default async function HomePage() {
           <Globe size={14} /> {t("meta")}
         </p>
         <div className="showcase-actions">
-          <Link className="showcase-btn-primary" href="/register">
+          <Link className="showcase-btn-primary" href={getStartedHref}>
             {t("getStarted")} <ArrowRight size={15} />
           </Link>
           <a

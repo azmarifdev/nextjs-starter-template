@@ -1,18 +1,46 @@
 "use client";
 
-import { BriefcaseBusiness, CheckSquare, LayoutDashboard, Users } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  CheckSquare,
+  CreditCard,
+  LayoutDashboard,
+  ShoppingCart,
+  Users
+} from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 import { useAuth } from "@/hooks/useAuth";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
+import { featureRegistry } from "@/lib/config/feature-registry";
 
 const links = [
   { href: "/dashboard", key: "overviewNav", icon: LayoutDashboard },
-  { href: "/users", key: "usersNav", icon: Users, requiresFeature: "admin", requiresRole: "admin" },
+  {
+    href: "/users",
+    key: "usersNav",
+    icon: Users,
+    requiresFeature: featureRegistry.find((feature) => feature.route === "/users")?.key ?? "admin",
+    requiresRole: "admin"
+  },
   { href: "/projects", key: "projectsNav", icon: BriefcaseBusiness },
-  { href: "/tasks", key: "tasksNav", icon: CheckSquare }
+  { href: "/tasks", key: "tasksNav", icon: CheckSquare },
+  {
+    href: "/ecommerce",
+    key: "ecommerceNav",
+    icon: ShoppingCart,
+    requiresFeature:
+      featureRegistry.find((feature) => feature.route === "/ecommerce")?.key ?? "ecommerce"
+  },
+  {
+    href: "/billing",
+    key: "billingNav",
+    icon: CreditCard,
+    requiresFeature:
+      featureRegistry.find((feature) => feature.route === "/billing")?.key ?? "billing"
+  }
 ] as const;
 
 export function Sidebar() {

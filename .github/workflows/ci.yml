@@ -73,9 +73,61 @@ jobs:
         if: matrix.task == 'test'
         run: npm run test
 
+  mode-matrix:
+    name: Mode Matrix (${{ matrix.backend_mode }} / ${{ matrix.api_mode }} / ${{ matrix.auth_provider }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - backend_mode: external
+            api_mode: rest
+            auth_provider: custom
+            api_base_url: https://api.example.com
+          - backend_mode: internal
+            api_mode: rest
+            auth_provider: custom
+            api_base_url: ""
+          - backend_mode: external
+            api_mode: graphql
+            auth_provider: custom
+            api_base_url: https://api.example.com
+          - backend_mode: external
+            api_mode: rest
+            auth_provider: nextauth
+            api_base_url: https://api.example.com
+    env:
+      NEXT_PUBLIC_APP_NAME: Nextjs Starter Template
+      NEXT_PUBLIC_BACKEND_MODE: ${{ matrix.backend_mode }}
+      NEXT_PUBLIC_API_MODE: ${{ matrix.api_mode }}
+      NEXT_PUBLIC_AUTH_PROVIDER: ${{ matrix.auth_provider }}
+      NEXT_PUBLIC_DB_PROVIDER: mongo
+      NEXT_PUBLIC_API_BASE_URL: ${{ matrix.api_base_url }}
+      NEXT_PUBLIC_FEATURE_ECOMMERCE: true
+      NEXT_PUBLIC_FEATURE_BILLING: true
+      NEXT_PUBLIC_FEATURE_ADMIN: true
+      MONGODB_URI: mongodb://localhost:27017
+      MONGODB_DB_NAME: ci_template
+      AUTH_SESSION_SECRET: ci-secret
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build for mode
+        run: npm run build
+
   build:
     name: Build
-    needs: quality
+    needs: [quality, mode-matrix]
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_APP_NAME: Nextjs Starter Template
@@ -94,6 +146,9 @@ jobs:
 
       - name: Prettier
         run: npm run format:check
+
+      - name: Docs Check
+        run: npm run docs:check
 
       - name: Build
         run: npm run build

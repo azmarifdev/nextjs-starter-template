@@ -1,12 +1,19 @@
-import { assertFeatureEnabled } from "@/lib/config/feature-flags";
+import { API_PREFIX } from "@/lib/constants";
 import type { EcommerceSummary } from "@/modules/ecommerce/types";
+import { apiClient } from "@/services/apiClient";
 
 export const ecommerceService = {
   async summary(): Promise<EcommerceSummary> {
-    assertFeatureEnabled("ecommerce");
-    return {
-      orders: 0,
-      revenue: 0
-    };
+    return apiClient.get<EcommerceSummary>(
+      `${API_PREFIX}/ecommerce/summary`,
+      `
+      query EcommerceSummary {
+        ecommerceSummary {
+          orders
+          revenue
+        }
+      }
+      `
+    );
   }
 };

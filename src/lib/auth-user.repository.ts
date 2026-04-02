@@ -2,7 +2,7 @@ import { and, eq } from "drizzle-orm";
 
 import type { AuthAdapter, AuthUserRecord } from "@/lib/auth/adapter";
 import { appConfig } from "@/lib/config/app-config";
-import { db } from "@/lib/db";
+import { getDrizzleClient } from "@/lib/db/providers/drizzle";
 import { getMongoDb } from "@/lib/db/providers/mongo";
 import { authUsers } from "@/lib/schema";
 import type { UserRole } from "@/types/auth";
@@ -17,6 +17,17 @@ interface MongoAuthUserDocument {
   lockedUntil: Date | null;
   createdAt: Date;
   updatedAt: Date;
+}
+
+export class AuthEmailExistsError extends Error {
+  constructor() {
+    super("Email already exists");
+    this.name = "AuthEmailExistsError";
+  }
+}
+
+export function isAuthEmailExistsError(error: unknown): boolean {
+  return error instanceof AuthEmailExistsError;
 }
 
 class MongoAuthAdapter implements AuthAdapter {
@@ -67,10 +78,11 @@ class MongoAuthAdapter implements AuthAdapter {
       throw new Error("MongoDB auth provider is not configured");
     }
 
+    const normalizedEmail = input.email.toLowerCase();
     const user: MongoAuthUserDocument = {
       id: `u_${crypto.randomUUID()}`,
       name: input.name,
-      email: input.email.toLowerCase(),
+      email: normalizedEmail,
       role: input.role ?? "user",
       passwordHash: input.passwordHash,
       failedLoginAttempts: 0,
@@ -79,7 +91,16 @@ class MongoAuthAdapter implements AuthAdapter {
       updatedAt: new Date()
     };
 
-    await collection.insertOne(user);
+    const result = await collection.updateOne(
+      { email: normalizedEmail },
+      {
+        $setOnInsert: user
+      },
+      { upsert: true }
+    );
+    if (!result.upsertedId) {
+      throw new AuthEmailExistsError();
+    }
 
     return {
       id: user.id,
@@ -134,10 +155,11 @@ class MongoAuthAdapter implements AuthAdapter {
 
 class PostgresAuthAdapter implements AuthAdapter {
   isConfigured(): boolean {
-    return Boolean(db);
+    return Boolean(getDrizzleClient());
   }
 
   async findByEmail(email: string): Promise<AuthUserRecord | null> {
+    const db = getDrizzleClient();
     if (!db) {
       return null;
     }
@@ -164,20 +186,30 @@ class PostgresAuthAdapter implements AuthAdapter {
     role?: UserRole;
     passwordHash: string;
   }): Promise<AuthUserRecord> {
+    const db = getDrizzleClient();
     if (!db) {
       throw new Error("Auth database is not configured");
     }
 
-    const [created] = await db
-      .insert(authUsers)
-      .values({
-        id: `u_${crypto.randomUUID()}`,
-        name: input.name,
-        email: input.email.toLowerCase(),
-        role: input.role ?? "user",
-        passwordHash: input.passwordHash
-      })
-      .returning();
+    let created;
+    try {
+      [created] = await db
+        .insert(authUsers)
+        .values({
+          id: `u_${crypto.randomUUID()}`,
+          name: input.name,
+          email: input.email.toLowerCase(),
+          role: input.role ?? "user",
+          passwordHash: input.passwordHash
+        })
+        .returning();
+    } catch (error) {
+      const errorCode = (error as { code?: string })?.code;
+      if (errorCode === "23505") {
+        throw new AuthEmailExistsError();
+      }
+      throw error;
+    }
 
     return {
       ...created,
@@ -186,6 +218,7 @@ class PostgresAuthAdapter implements AuthAdapter {
   }
 
   async resetFailedLoginAttempts(userId: string): Promise<void> {
+    const db = getDrizzleClient();
     if (!db) {
       return;
     }
@@ -204,6 +237,7 @@ class PostgresAuthAdapter implements AuthAdapter {
     user: Pick<AuthUserRecord, "id" | "failedLoginAttempts">,
     lockUntil: Date | null
   ): Promise<void> {
+    const db = getDrizzleClient();
     if (!db) {
       return;
     }

@@ -2,7 +2,7 @@ import { requireInternalBackend } from "@/lib/api/internal-backend";
 import { withApiHandler } from "@/lib/api-handler";
 import { apiSuccess, resolveRequestId } from "@/lib/api-response";
 import { requirePermission, requireSession } from "@/lib/auth/session-guard";
-import { listDemoProjects } from "@/lib/demo-data";
+import { projectsRepository } from "@/lib/repositories/projects.repository";
 
 async function projectsHandler(request: Request): Promise<Response> {
   const requestId = resolveRequestId(request.headers);
@@ -22,7 +22,8 @@ async function projectsHandler(request: Request): Promise<Response> {
     return permissionError;
   }
 
-  return apiSuccess(listDemoProjects(), { requestId });
+  const projects = await projectsRepository.list();
+  return apiSuccess(projects, { requestId });
 }
 
 export const GET = withApiHandler("/api/v1/projects", projectsHandler);

@@ -20,3 +20,11 @@ test("authenticated user can access dashboard", async ({ page }) => {
   await expect(page).toHaveURL(/\/dashboard$/);
   await expect(page.getByRole("heading", { name: /dashboard overview/i })).toBeVisible();
 });
+
+test("feature routes require auth", async ({ page }) => {
+  await page.goto("/ecommerce");
+  await expect(page).toHaveURL(/\/login$/);
+
+  await page.goto("/billing");
+  await expect(page).toHaveURL(/\/login$/);
+});

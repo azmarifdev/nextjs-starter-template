@@ -20,6 +20,7 @@ src/
       providers/
     errors/
     observability/
+    repositories/
     security/
   modules/
     auth/

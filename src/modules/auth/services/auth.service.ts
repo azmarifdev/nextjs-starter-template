@@ -1,3 +1,5 @@
+"use client";
+
 import { appConfig } from "@/lib/config/app-config";
 import { customAuthService } from "@/modules/auth/services/custom-auth.service";
 import { nextAuthService } from "@/modules/auth/services/nextauth.service";

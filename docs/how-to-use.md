@@ -6,6 +6,8 @@
 npm ci
 ```
 
+Use npm as the primary package manager for this template.
+
 ## 2. Configure environment
 
 ```bash
@@ -32,6 +34,7 @@ npm run lint
 npm run typecheck
 npm run test
 npm run e2e
+npm run docs:check
 ```
 
 ## 5. Configure providers

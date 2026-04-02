@@ -20,6 +20,16 @@ export default async function DashboardMainPage() {
           <h2 className="card-title text-title-sm">{t("tasksTitle")}</h2>
           <p className="help-text">{t("tasksSubtitle")}</p>
         </article>
+
+        <article className="card">
+          <h2 className="card-title text-title-sm">{t("ecommerceTitle")}</h2>
+          <p className="help-text">{t("ecommerceSubtitle")}</p>
+        </article>
+
+        <article className="card">
+          <h2 className="card-title text-title-sm">{t("billingTitle")}</h2>
+          <p className="help-text">{t("billingSubtitle")}</p>
+        </article>
       </section>
     </div>
   );

@@ -13,6 +13,7 @@ This template is designed for real teams shipping real products: modular archite
 - Full auth system with custom JWT flow and optional NextAuth.
 - Feature-toggle support for ecommerce, billing, and admin modules.
 - TanStack Query-first data fetching architecture.
+- npm-first package management policy for consistent lockfiles and CI.
 
 ## Core Configuration
 
@@ -161,6 +162,10 @@ Detailed docs:
 
 ## Getting Started
 
+### Package Manager Policy
+
+This boilerplate is npm-first. Use npm as the canonical package manager for team consistency and CI alignment.
+
 ### 1) Install dependencies
 
 ```bash
@@ -271,6 +276,12 @@ Then implement/point to a GraphQL endpoint compatible with your selected backend
 
 ```bash
 npm run dev
+```
+
+### 4) Validate docs/config consistency
+
+```bash
+npm run docs:check
 ```
 
 ## Configuration Modes
@@ -387,11 +398,22 @@ Core scripts:
 
 Database and Docker scripts are available in `package.json`.
 
+Note: This template is npm-only by default for deterministic CI. Commit only `package-lock.json`.
+
 ## Testing
 
 - Unit/integration with Vitest under `src/tests`.
 - E2E with Playwright.
 - Jest is not used.
+
+### CI Mode Matrix
+
+CI runs build smoke checks against multiple configuration combinations, including:
+
+- `external + rest + custom`
+- `internal + rest + custom`
+- `external + graphql + custom`
+- `external + rest + nextauth`
 
 ### E2E Important Note
 
