@@ -46,11 +46,8 @@ jobs:
       - name: Prettier
         run: npm run format:check
 
-      - name: Unit tests (Jest)
+      - name: Unit tests
         run: npm run test
-
-      - name: Unit tests (Vitest)
-        run: npm run test:vitest
 
       - name: Build
         run: npm run build
@@ -63,7 +60,7 @@ jobs:
     env:
       NEXT_PUBLIC_APP_NAME: Nextjs Starter Template
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+      AUTH_SESSION_SECRET: ${{ secrets.AUTH_SESSION_SECRET }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4

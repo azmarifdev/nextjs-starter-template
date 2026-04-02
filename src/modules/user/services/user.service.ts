@@ -1,12 +1,10 @@
+import { API_PREFIX } from "@/lib/constants";
 import { UserListItem } from "@/modules/user/types";
-
-const mockUsers: UserListItem[] = [
-  { id: "u_1", name: "Sarah Khan", email: "sarah@example.com", role: "admin" },
-  { id: "u_2", name: "Alex Reed", email: "alex@example.com", role: "user" }
-];
+import { apiClient } from "@/services/apiClient";
 
 export const userService = {
   async listUsers(): Promise<UserListItem[]> {
-    return Promise.resolve(mockUsers);
+    const { data } = await apiClient.get<UserListItem[]>(`${API_PREFIX}/users`);
+    return data;
   }
 };

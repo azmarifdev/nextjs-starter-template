@@ -10,8 +10,12 @@ export function useTasks() {
 
   useEffect(() => {
     const run = async (): Promise<void> => {
-      const response = await taskService.listTasks();
-      setTasks(response);
+      try {
+        const response = await taskService.listTasks();
+        setTasks(response);
+      } catch {
+        setTasks([]);
+      }
     };
 
     void run();

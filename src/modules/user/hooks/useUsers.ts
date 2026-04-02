@@ -11,9 +11,14 @@ export function useUsers() {
 
   useEffect(() => {
     const run = async (): Promise<void> => {
-      const response = await userService.listUsers();
-      setUsers(response);
-      setIsLoading(false);
+      try {
+        const response = await userService.listUsers();
+        setUsers(response);
+      } catch {
+        setUsers([]);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     void run();

@@ -17,7 +17,7 @@ export default async function HomePage() {
             <LangSwitcher />
             <ThemeSwitcher />
             <Link className="showcase-signin" href="/login">
-              Sign in
+              {t("signIn")}
             </Link>
           </div>
         </div>
@@ -26,21 +26,18 @@ export default async function HomePage() {
       <section className="showcase-hero container">
         <p className="showcase-badge">
           <Sparkles size={14} />
-          By A. Z. M. Arif · Full Stack Software Developer
+          {t("badge")}
         </p>
         <h1 className="showcase-title">
-          <span>Next.js</span> starter template
+          <span>Next.js</span> {t("titleSuffix")}
         </h1>
-        <p className="showcase-subtitle">
-          {t("subtitle")} Built for quick launch, maintainable growth, and production-grade
-          development workflow.
-        </p>
+        <p className="showcase-subtitle">{t("subtitle")}</p>
         <p className="showcase-meta">
-          <Globe size={14} /> azmarif.dev · @azmarifdev
+          <Globe size={14} /> {t("meta")}
         </p>
         <div className="showcase-actions">
           <Link className="showcase-btn-primary" href="/register">
-            Get started <ArrowRight size={15} />
+            {t("getStarted")} <ArrowRight size={15} />
           </Link>
           <a
             className="showcase-btn-secondary"

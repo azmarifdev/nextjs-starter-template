@@ -10,8 +10,12 @@ export function useProjects() {
 
   useEffect(() => {
     const run = async (): Promise<void> => {
-      const response = await projectService.listProjects();
-      setProjects(response);
+      try {
+        const response = await projectService.listProjects();
+        setProjects(response);
+      } catch {
+        setProjects([]);
+      }
     };
 
     void run();

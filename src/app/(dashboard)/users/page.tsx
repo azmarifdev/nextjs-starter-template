@@ -1,9 +1,13 @@
+import { getTranslations } from "next-intl/server";
+
 import { UserTable } from "@/modules/user/components/UserTable";
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  const t = await getTranslations("dashboard");
+
   return (
     <div className="stack">
-      <h1 className="card-title">Users</h1>
+      <h1 className="card-title">{t("usersNav")}</h1>
       <UserTable />
     </div>
   );

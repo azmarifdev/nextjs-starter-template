@@ -1,10 +1,64 @@
 {
   "common": {
     "welcome": "Welcome",
-    "logout": "Logout"
+    "logout": "Logout",
+    "login": "Login",
+    "toggleLanguage": "Toggle language"
   },
   "home": {
     "title": "Nextjs Starter Template",
-    "subtitle": "A production-ready Next.js starter template for SaaS, dashboards, and modern web apps."
+    "titleSuffix": "starter template",
+    "subtitle": "A production-ready Next.js starter template for SaaS, dashboards, and modern web apps. Built for quick launch, maintainable growth, and production-grade development workflow.",
+    "signIn": "Sign in",
+    "getStarted": "Get started",
+    "badge": "By A. Z. M. Arif · Full Stack Software Developer",
+    "meta": "azmarif.dev · @azmarifdev"
+  },
+  "auth": {
+    "loginTitle": "Welcome back",
+    "registerTitle": "Create account",
+    "loginSubtitle": "Log in to continue.",
+    "registerSubtitle": "Start with your new account.",
+    "loading": "Please wait...",
+    "actions": {
+      "login": "Login",
+      "register": "Register"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "email": "Email",
+      "password": "Password"
+    },
+    "loginSwitchText": "No account yet?",
+    "registerSwitchText": "Already have an account?"
+  },
+  "dashboard": {
+    "overviewTitle": "Dashboard Overview",
+    "overviewSubtitle": "This is a domain-neutral starter template for SaaS, internal tools, and admin dashboards.",
+    "projectsTitle": "Projects at a glance",
+    "projectsSubtitle": "Track project progress, ownership, and status in one place.",
+    "tasksTitle": "Task workflow",
+    "tasksSubtitle": "Use tasks to model work queues for any product or operations team.",
+    "overviewNav": "Overview",
+    "usersNav": "Users",
+    "projectsNav": "Projects",
+    "tasksNav": "Tasks"
+  },
+  "users": {
+    "loading": "Loading users",
+    "emptyTitle": "No users found",
+    "emptyDescription": "Users will appear here when available.",
+    "columns": {
+      "name": "Name",
+      "email": "Email",
+      "role": "Role"
+    }
+  },
+  "projects": {
+    "owner": "Owner"
+  },
+  "tasks": {
+    "assignee": "Assignee",
+    "priority": "Priority"
   }
 }

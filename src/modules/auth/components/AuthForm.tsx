@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { SocialLoginButton } from "@/modules/auth/components/SocialLoginButton";
 import { useAuthForm } from "@/modules/auth/hooks/useAuthForm";
 
 interface AuthFormProps {
@@ -12,6 +12,7 @@ interface AuthFormProps {
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
+  const t = useTranslations("auth");
   const { form, serverError, onSubmit } = useAuthForm({ mode });
 
   const {
@@ -22,28 +23,28 @@ export function AuthForm({ mode }: AuthFormProps) {
   return (
     <form onSubmit={onSubmit} className="card form-grid auth-card">
       <div>
-        <h1 className="card-title">{mode === "login" ? "Welcome back" : "Create account"}</h1>
+        <h1 className="card-title">{mode === "login" ? t("loginTitle") : t("registerTitle")}</h1>
         <p className="card-subtitle">
-          {mode === "login" ? "Log in to continue." : "Start with your new account."}
+          {mode === "login" ? t("loginSubtitle") : t("registerSubtitle")}
         </p>
       </div>
 
       {mode === "register" ? (
         <Input
-          placeholder="Full name"
+          placeholder={t("fields.fullName")}
           error={"name" in errors ? errors.name?.message : undefined}
           {...register("name")}
         />
       ) : null}
 
       <Input
-        placeholder="Email"
+        placeholder={t("fields.email")}
         type="email"
         error={errors.email?.message}
         {...register("email")}
       />
       <Input
-        placeholder="Password"
+        placeholder={t("fields.password")}
         type="password"
         error={errors.password?.message}
         {...register("password")}
@@ -52,14 +53,17 @@ export function AuthForm({ mode }: AuthFormProps) {
       {serverError ? <p className="error-text">{serverError}</p> : null}
 
       <Button type="submit" className="full-width" disabled={isSubmitting}>
-        {isSubmitting ? "Please wait..." : mode === "login" ? "Login" : "Register"}
+        {isSubmitting
+          ? t("loading")
+          : mode === "login"
+            ? t("actions.login")
+            : t("actions.register")}
       </Button>
-      <SocialLoginButton />
 
       <p className="help-text">
-        {mode === "login" ? "No account yet?" : "Already have an account?"}{" "}
+        {mode === "login" ? t("loginSwitchText") : t("registerSwitchText")}{" "}
         <Link href={mode === "login" ? "/register" : "/login"} className="link-inline">
-          {mode === "login" ? "Register" : "Login"}
+          {mode === "login" ? t("actions.register") : t("actions.login")}
         </Link>
       </p>
     </form>

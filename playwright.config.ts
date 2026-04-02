@@ -18,8 +18,12 @@ export default defineConfig({
     }
   ],
   webServer: {
-    command: "npm run dev",
+    command: "npm run preview",
     url: "http://127.0.0.1:3000",
+    env: {
+      ...process.env,
+      AUTH_SESSION_SECRET: process.env.AUTH_SESSION_SECRET ?? "e2e-local-secret"
+    },
     reuseExistingServer: !process.env.CI
   }
 });
