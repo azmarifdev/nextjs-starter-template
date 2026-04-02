@@ -12,7 +12,7 @@ import type { Route } from "next";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 
-import { useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/use-auth.hook";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
 import { featureRegistry } from "@/lib/config/feature-registry";
 

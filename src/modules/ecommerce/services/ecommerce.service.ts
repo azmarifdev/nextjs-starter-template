@@ -1,5 +1,5 @@
-import { API_PREFIX } from "@/lib/constants";
-import type { EcommerceSummary } from "@/modules/ecommerce/types";
+import { API_PREFIX } from "@/lib/config/constants";
+import type { EcommerceSummary } from "@/modules/ecommerce/ecommerce.types";
 import { apiClient } from "@/services/apiClient";
 
 export const ecommerceService = {

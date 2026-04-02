@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig } from "@/lib/config/site-config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const routes = ["", "/login", "/register", "/dashboard", "/users", "/projects", "/tasks"];

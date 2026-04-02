@@ -1,9 +1,9 @@
-import { API_PREFIX } from "@/lib/constants";
-import type { AuthPayload, AuthResponse } from "@/modules/auth/types";
+import { API_PREFIX } from "@/lib/config/constants";
+import type { AuthPayload, AuthResponse } from "@/modules/auth/auth.types";
 import { apiClient } from "@/services/apiClient";
 import type { User } from "@/types/user";
 
-export const customAuthService = {
+export const customAuthProvider = {
   login(payload: AuthPayload): Promise<AuthResponse> {
     return apiClient.post<AuthResponse, AuthPayload>(
       `${API_PREFIX}/auth/login`,

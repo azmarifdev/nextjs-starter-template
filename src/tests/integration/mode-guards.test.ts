@@ -77,15 +77,14 @@ describe("mode guards", () => {
     expect(payload.error?.code).toBe("AUTH_PROVIDER_DISABLED");
   });
 
-  it("returns 404 for rate-limit-example when backend mode is external", async () => {
+  it("keeps external mode strict for REST client calls", async () => {
     process.env.NEXT_PUBLIC_BACKEND_MODE = "external";
+    process.env.NEXT_PUBLIC_API_BASE_URL = "";
 
-    const { GET } = await import("@/app/api/v1/rate-limit-example/route");
-    const { NextRequest } = await import("next/server");
-    const response = await GET(new NextRequest("http://localhost/api/v1/rate-limit-example"));
-    const payload = await response.json();
+    const { restGet } = await import("@/services/rest/client");
 
-    expect(response.status).toBe(404);
-    expect(payload.error?.code).toBe("INTERNAL_API_DISABLED");
+    await expect(restGet("/users")).rejects.toThrow(
+      "NEXT_PUBLIC_API_BASE_URL is required when NEXT_PUBLIC_BACKEND_MODE=external"
+    );
   });
 });

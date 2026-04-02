@@ -1,6 +1,6 @@
 import { appConfig } from "@/lib/config/app-config";
-import { API_PREFIX } from "@/lib/constants";
-import { env } from "@/lib/env";
+import { API_PREFIX } from "@/lib/config/constants";
+import { env } from "@/lib/config/env";
 
 function trimTrailingSlash(value: string): string {
   return value.endsWith("/") ? value.slice(0, -1) : value;

@@ -1,5 +1,5 @@
 import { appConfig } from "@/lib/config/app-config";
-import { env } from "@/lib/env";
+import { env } from "@/lib/config/env";
 
 let validated = false;
 

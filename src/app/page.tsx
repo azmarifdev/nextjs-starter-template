@@ -14,7 +14,7 @@ export default async function HomePage() {
     <main className="landing-wrap">
       <header className="showcase-topbar">
         <div className="showcase-topbar-inner container">
-          <p className="showcase-brand">nextjs-starter-template</p>
+          <p className="showcase-brand">Azmarif Dev</p>
           <div className="showcase-topbar-actions">
             <LangSwitcher />
             <ThemeSwitcher />

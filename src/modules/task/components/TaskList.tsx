@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { Skeleton } from "@/components/common/skeleton";
-import { useTasks } from "@/modules/task/hooks/useTasks";
+import { useTasks } from "@/modules/task/hooks/use-tasks.hook";
 
 export function TaskList() {
   const t = useTranslations("tasks");

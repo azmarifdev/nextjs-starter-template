@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { Skeleton } from "@/components/common/skeleton";
-import { useProjects } from "@/modules/project/hooks/useProjects";
+import { useProjects } from "@/modules/project/hooks/use-projects.hook";
 
 export function ProjectList() {
   const t = useTranslations("projects");

@@ -1,24 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireCustomAuthProvider, requireInternalBackend } from "@/lib/api/internal-backend";
-import { withApiHandler } from "@/lib/api-handler";
-import { apiError, apiSuccess, resolveRequestId } from "@/lib/api-response";
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
 import {
   AuthEmailExistsError,
   createAuthUser,
   findAuthUserByEmail,
   isAuthDatabaseConfigured
-} from "@/lib/auth-user.repository";
+} from "@/lib/auth/auth-user.repository";
+import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
+import { hashPassword } from "@/lib/auth/password";
+import { createSessionToken } from "@/lib/auth/session";
 import { appConfig } from "@/lib/config/app-config";
-import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/constants";
+import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/config/constants";
 import { setRequestIdHeader } from "@/lib/observability/request-id";
 import { withTrace } from "@/lib/observability/tracing";
-import { hashPassword } from "@/lib/password";
 import { getSafeRedirectPath } from "@/lib/security/redirect";
 import { requireSameOrigin } from "@/lib/security/request-origin";
-import { createSessionToken } from "@/lib/session";
-import { registerSchema } from "@/modules/auth/validation";
+import { apiError, apiSuccess, resolveRequestId } from "@/lib/utils/api-response";
+import { registerSchema } from "@/modules/auth/auth.validation";
+
+import { requireCustomAuthProvider, requireInternalBackend, withApiHandler } from "../route-utils";
 
 function prefersHtmlResponse(request: NextRequest): boolean {
   const accept = request.headers.get("accept") ?? "";

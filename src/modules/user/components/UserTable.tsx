@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { Skeleton } from "@/components/common/skeleton";
-import { useUsers } from "@/modules/user/hooks/useUsers";
+import { useUsers } from "@/modules/user/hooks/use-users.hook";
 
 export function UserTable() {
   const t = useTranslations("users");

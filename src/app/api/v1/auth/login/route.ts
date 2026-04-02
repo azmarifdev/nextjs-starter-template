@@ -1,27 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { requireCustomAuthProvider, requireInternalBackend } from "@/lib/api/internal-backend";
-import { withApiHandler } from "@/lib/api-handler";
-import { apiError, apiSuccess, resolveRequestId } from "@/lib/api-response";
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
 import {
   findAuthUserByEmail,
   isAuthDatabaseConfigured,
   recordFailedLoginAttempt,
   resetFailedLoginAttempts
-} from "@/lib/auth-user.repository";
+} from "@/lib/auth/auth-user.repository";
+import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
+import { tryDevAuthLogin } from "@/lib/auth/dev-auth-fallback";
+import { verifyPassword } from "@/lib/auth/password";
+import { createSessionToken } from "@/lib/auth/session";
 import { appConfig } from "@/lib/config/app-config";
-import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/constants";
-import { tryDevAuthLogin } from "@/lib/dev-auth-fallback";
+import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/config/constants";
 import { logger } from "@/lib/observability/logger";
 import { setRequestIdHeader } from "@/lib/observability/request-id";
 import { withTrace } from "@/lib/observability/tracing";
-import { verifyPassword } from "@/lib/password";
-import { attachRateLimitHeaders, consumeRateLimit } from "@/lib/rate-limit";
+import { attachRateLimitHeaders, consumeRateLimit } from "@/lib/security/rate-limit";
 import { getSafeRedirectPath } from "@/lib/security/redirect";
 import { requireSameOrigin } from "@/lib/security/request-origin";
-import { createSessionToken } from "@/lib/session";
-import { loginSchema } from "@/modules/auth/validation";
+import { apiError, apiSuccess, resolveRequestId } from "@/lib/utils/api-response";
+import { loginSchema } from "@/modules/auth/auth.validation";
+
+import { requireCustomAuthProvider, requireInternalBackend, withApiHandler } from "../route-utils";
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_WINDOW_MS = 15 * 60 * 1000;

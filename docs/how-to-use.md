@@ -1,66 +1,59 @@
 # How To Use
 
-## 1. Install
+## 1) Install
 
 ```bash
-npm ci
+pnpm install --frozen-lockfile
 ```
 
-Use npm as the primary package manager for this template.
-
-## 2. Configure environment
+## 2) Configure Environment
 
 ```bash
 cp .env.example .env.local
 ```
 
-Update:
+Set at minimum:
 
-- platform mode (`NEXT_PUBLIC_API_MODE`, `NEXT_PUBLIC_BACKEND_MODE`)
-- database provider (`NEXT_PUBLIC_DB_PROVIDER`)
-- auth provider (`NEXT_PUBLIC_AUTH_PROVIDER`)
-- feature flags (`NEXT_PUBLIC_FEATURE_*`)
+- `NEXT_PUBLIC_API_MODE`
+- `NEXT_PUBLIC_BACKEND_MODE`
+- `NEXT_PUBLIC_DB_PROVIDER`
+- `NEXT_PUBLIC_AUTH_PROVIDER`
+- `NEXT_PUBLIC_API_BASE_URL` (required in external mode)
 
-## 3. Start development
-
-```bash
-npm run dev
-```
-
-## 4. Run quality checks
+## 3) Start Dev Server
 
 ```bash
-npm run lint
-npm run typecheck
-npm run test
-npm run e2e
-npm run docs:check
+pnpm run dev
 ```
 
-## 5. Configure providers
+## 4) Run Quality Checks
 
-### MongoDB (default)
+```bash
+pnpm run lint
+pnpm run typecheck
+pnpm run test
+pnpm run e2e
+pnpm run docs:check
+```
 
-- set `MONGODB_URI`
-- set `MONGODB_DB_NAME`
-
-### PostgreSQL (optional)
-
-- set `DATABASE_URL`
-- set `NEXT_PUBLIC_DB_PROVIDER=postgres`
+## 5) Choose Runtime Modes
 
 ### External backend (default)
 
-- keep `NEXT_PUBLIC_BACKEND_MODE=external`
-- set `NEXT_PUBLIC_API_BASE_URL`
+- `NEXT_PUBLIC_BACKEND_MODE=external`
+- `NEXT_PUBLIC_API_BASE_URL=https://api.example.com`
 
-### Internal backend (optional)
+### Internal auth APIs (optional)
 
-- set `NEXT_PUBLIC_BACKEND_MODE=internal`
-- internal API routes under `src/app/api/v1/*` become active
+- `NEXT_PUBLIC_BACKEND_MODE=internal`
+- uses `src/app/api/v1/auth/*`
 
-## 6. Deploy
+### NextAuth (optional)
 
-- Docker: default deployment path (`Dockerfile`, `docker-compose.yml`)
-- Vercel: optional (`vercel.json`)
-- AWS/Azure: use docs in `deploy/*`
+- `NEXT_PUBLIC_AUTH_PROVIDER=nextauth`
+
+## 6) Deploy
+
+- Docker-first: `Dockerfile`, `docker-compose.yml`
+- Vercel optional
+- Cloud notes: `docs/deployment/cloud-providers.md`

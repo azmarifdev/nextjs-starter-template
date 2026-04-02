@@ -1,5 +1,5 @@
-import { API_PREFIX } from "@/lib/constants";
-import { UserListItem } from "@/modules/user/types";
+import { API_PREFIX } from "@/lib/config/constants";
+import { UserListItem } from "@/modules/user/user.types";
 import { apiClient } from "@/services/apiClient";
 
 export const userService = {

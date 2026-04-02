@@ -1,31 +1,20 @@
 # Auth Flow
 
-## Custom Auth (Default)
+## Custom Auth Provider
 
-1. User submits login/register form.
-2. `modules/auth/hooks/useAuthForm.ts` triggers auth mutation.
-3. `modules/auth/services/custom-auth.service.ts` calls API layer.
-4. API returns standardized `ApiResponse<T>`.
-5. Session cookie is set (HTTP-only) for internal mode, or handled by external backend.
-6. `AuthProvider` resolves current user (`/auth/me`) with TanStack Query.
-7. RBAC checks are enforced by proxy and server guards.
+1. User submits `AuthForm`.
+2. `modules/auth/hooks/use-auth-form.hook.ts` runs mutation via `authService`.
+3. `modules/auth/services/auth.service.ts` uses `lib/auth/auth.provider.ts`.
+4. `lib/auth/custom-auth.provider.ts` calls backend auth endpoints through `services/apiClient.ts`.
+5. Session state is synced through `providers/auth.provider.tsx`.
 
-## NextAuth (Optional)
+## NextAuth Provider
 
-- Set `NEXT_PUBLIC_AUTH_PROVIDER=nextauth`.
-- Enable NextAuth route at `src/app/api/auth/[...nextauth]/route.ts`.
-- Credentials provider is available by default.
-- Google provider is enabled automatically when credentials are configured.
+1. `NEXT_PUBLIC_AUTH_PROVIDER=nextauth` switches active auth provider.
+2. Requests flow through `src/app/api/auth/[...nextauth]/route.ts`.
+3. Core NextAuth config lives in `src/lib/auth/nextauth.ts`.
 
-## Refresh Token
+## Route Guards
 
-- Custom auth includes `POST /api/v1/auth/refresh`.
-- The endpoint rotates session token and extends expiry.
-
-## RBAC
-
-- Roles: `admin`, `user`.
-- Permissions are enforced in:
-  - `src/proxy.ts` (route-level)
-  - `src/lib/auth/session-guard.ts` (API-level)
-  - UI rendering (navigation and feature visibility)
+- Route-level protection is enforced in `src/proxy.ts`.
+- Permission checks use RBAC utilities in `src/lib/auth/rbac.ts`.

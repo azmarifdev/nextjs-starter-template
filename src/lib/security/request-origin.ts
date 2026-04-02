@@ -1,4 +1,4 @@
-import { apiError } from "@/lib/api-response";
+import { apiError } from "@/lib/utils/api-response";
 
 function normalizeOrigin(value: string | null): string | null {
   if (!value) {

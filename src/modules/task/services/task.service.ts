@@ -1,5 +1,5 @@
-import { API_PREFIX } from "@/lib/constants";
-import { TaskItem } from "@/modules/task/types";
+import { API_PREFIX } from "@/lib/config/constants";
+import { TaskItem } from "@/modules/task/task.types";
 import { apiClient } from "@/services/apiClient";
 
 export const taskService = {

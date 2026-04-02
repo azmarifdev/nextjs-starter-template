@@ -3,7 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { useAppTheme } from "@/providers/ThemeProvider";
+import { useAppTheme } from "@/providers/theme.provider";
 
 export function ThemeSwitcher() {
   const { theme, setTheme } = useAppTheme();

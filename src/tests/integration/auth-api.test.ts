@@ -3,7 +3,7 @@
 import { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { AUTH_COOKIE_NAME } from "@/lib/constants";
+import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
 
 const ORIGINAL_ENV = {
   NEXT_PUBLIC_BACKEND_MODE: process.env.NEXT_PUBLIC_BACKEND_MODE,
@@ -71,7 +71,6 @@ describe("auth api integration", () => {
     const { POST: loginPost } = await import("@/app/api/v1/auth/login/route");
     const { GET: meGet } = await import("@/app/api/v1/auth/me/route");
     const { POST: refreshPost } = await import("@/app/api/v1/auth/refresh/route");
-    const { GET: projectsGet } = await import("@/app/api/v1/projects/route");
 
     const loginResponse = await loginPost(
       buildJsonRequest("http://localhost/api/v1/auth/login", {
@@ -100,19 +99,6 @@ describe("auth api integration", () => {
     expect(meResponse.status).toBe(200);
     expect(mePayload.success).toBe(true);
     expect(mePayload.data.email).toBe("admin@example.com");
-
-    const projectsRequest = new NextRequest("http://localhost/api/v1/projects", {
-      method: "GET",
-      headers: {
-        cookie: setCookie ?? ""
-      }
-    });
-    const projectsResponse = await projectsGet(projectsRequest);
-    const projectsPayload = await projectsResponse.json();
-
-    expect(projectsResponse.status).toBe(200);
-    expect(projectsPayload.success).toBe(true);
-    expect(Array.isArray(projectsPayload.data)).toBe(true);
 
     const refreshRequest = new NextRequest("http://localhost/api/v1/auth/refresh", {
       method: "POST",

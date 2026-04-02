@@ -2,7 +2,7 @@
   "name": "nextjs-starter-template",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "npm@10.8.2",
+  "packageManager": "pnpm@10.33.0",
   "engines": {
     "node": ">=20 <23"
   },
@@ -10,7 +10,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "node scripts/start.mjs",
-    "preview": "npm run build && npm run start",
+    "preview": "pnpm run build && pnpm run start",
     "analyze": "ANALYZE=true next build",
     "lint": "eslint src --ext .ts,.tsx --cache",
     "lint:fix": "eslint src --ext .ts,.tsx --fix --cache",
@@ -34,13 +34,13 @@
     "codehawk": "codehawk src",
     "docs:check": "node scripts/check-docs.mjs",
     "clean": "node scripts/clean.mjs",
-    "install:npm": "npm ci",
     "docker:build": "docker build -t nextjs-starter-template .",
     "docker:run": "docker run --env-file .env.local -p 3000:3000 nextjs-starter-template",
     "docker:up": "docker compose up --build",
     "docker:up:db": "docker compose --profile db up --build",
     "docker:down": "docker compose down",
-    "prepare": "husky"
+    "prepare": "husky",
+    "install:pnpm": "pnpm install --frozen-lockfile"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

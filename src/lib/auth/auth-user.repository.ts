@@ -4,7 +4,7 @@ import type { AuthAdapter, AuthUserRecord } from "@/lib/auth/adapter";
 import { appConfig } from "@/lib/config/app-config";
 import { getDrizzleClient } from "@/lib/db/providers/drizzle";
 import { getMongoDb } from "@/lib/db/providers/mongo";
-import { authUsers } from "@/lib/schema";
+import { authUsers } from "@/lib/db/schema";
 import type { UserRole } from "@/types/auth";
 
 interface MongoAuthUserDocument {

@@ -23,19 +23,9 @@ jobs:
         with:
           files: |
             package.json
-            package-lock.json
-            npm-shrinkwrap.json
-            yarn.lock
             pnpm-lock.yaml
-            bun.lock
-            bun.lockb
             **/package.json
-            **/package-lock.json
-            **/npm-shrinkwrap.json
-            **/yarn.lock
             **/pnpm-lock.yaml
-            **/bun.lock
-            **/bun.lockb
 
       - name: Dependency review
         if: steps.dep-changes.outputs.any_changed == 'true'

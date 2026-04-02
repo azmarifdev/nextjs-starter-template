@@ -2,16 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
 import { hasPermission } from "@/lib/auth/rbac";
+import { verifySessionToken } from "@/lib/auth/session";
+import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
 import { findFeatureByPath } from "@/lib/config/feature-registry";
 import { validateRuntimeConfig } from "@/lib/config/validate";
-import { AUTH_COOKIE_NAME } from "@/lib/constants";
 import {
   getOrCreateRequestId,
   REQUEST_ID_HEADER,
   setRequestIdHeader
 } from "@/lib/observability/request-id";
-import { verifySessionToken } from "@/lib/session";
 
 const protectedRoutes = ["/dashboard", "/projects", "/tasks", "/ecommerce", "/billing", "/users"];
 const authRoutes = ["/login", "/register"];

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 
 import { EmptyState } from "@/components/common/empty-state";
 import { Skeleton } from "@/components/common/skeleton";
-import { useEcommerceSummary } from "@/modules/ecommerce/hooks/useEcommerceSummary";
+import { useEcommerceSummary } from "@/modules/ecommerce/hooks/use-ecommerce-summary.hook";
 
 export function EcommercePanel() {
   const t = useTranslations("ecommerce");
