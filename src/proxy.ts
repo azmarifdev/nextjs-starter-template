@@ -9,7 +9,7 @@ const authRoutes = ["/login", "/register"];
 
 const intlMiddleware = createMiddleware(routing);
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const intlResponse = intlMiddleware(request);
   const token = request.cookies.get(AUTH_COOKIE_NAME)?.value;
   const { pathname } = request.nextUrl;
