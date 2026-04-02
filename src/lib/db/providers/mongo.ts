@@ -1,6 +1,6 @@
 import { Db, MongoClient } from "mongodb";
 
-import { env } from "@/lib/env";
+import { env } from "@/lib/config/env";
 
 const globalState = globalThis as unknown as {
   __mongoClient?: MongoClient;

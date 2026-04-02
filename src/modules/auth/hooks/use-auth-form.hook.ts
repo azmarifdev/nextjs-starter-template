@@ -7,15 +7,15 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 
-import { authService } from "@/modules/auth/services/auth.service";
-import type { AuthPayload } from "@/modules/auth/types";
+import type { AuthPayload } from "@/modules/auth/auth.types";
 import {
   type LoginFormValues,
   loginSchema,
   type RegisterFormValues,
   registerSchema
-} from "@/modules/auth/validation";
-import { useToast } from "@/providers/ToastProvider";
+} from "@/modules/auth/auth.validation";
+import { authService } from "@/modules/auth/services/auth.service";
+import { useToast } from "@/providers/toast.provider";
 import type { AppDispatch } from "@/store";
 import { setAuthUser } from "@/store/slices/authSlice";
 

@@ -6,6 +6,9 @@ src/
     (auth)/
     (dashboard)/
     api/
+      auth/
+      v1/
+        auth/
   components/
     common/
     layout/
@@ -13,7 +16,6 @@ src/
   hooks/
   i18n/
   lib/
-    api/
     auth/
     config/
     db/
@@ -21,44 +23,47 @@ src/
     errors/
     observability/
     security/
+    utils/
   modules/
     auth/
       components/
       hooks/
       services/
-      types.ts
-      validation.ts
+      auth.types.ts
+      auth.validation.ts
     user/
       components/
       hooks/
       services/
-      types.ts
-      validation.ts
+      user.types.ts
+      user.validation.ts
     project/
       components/
       hooks/
       services/
-      types.ts
-      validation.ts
+      project.types.ts
+      project.validation.ts
     task/
       components/
       hooks/
       services/
-      types.ts
-      validation.ts
+      task.types.ts
+      task.validation.ts
     ecommerce/
       components/
       hooks/
       services/
-      types.ts
-      validation.ts
+      ecommerce.types.ts
+      ecommerce.validation.ts
     billing/
       components/
       hooks/
       services/
-      types.ts
-      validation.ts
+      billing.types.ts
+      billing.validation.ts
   providers/
+    index.tsx
+    *.provider.tsx
   services/
     apiClient.ts
     rest/
@@ -68,9 +73,17 @@ src/
   tests/
 ```
 
-## Rules
+## Conventions
 
-- Business logic must stay inside `modules/*`.
-- Shared transport logic belongs in `services/*`.
-- Reusable UI belongs in `components/*`.
-- Global app internals belong in `lib/*`.
+- `*.service.ts` for service layer files
+- `*.hook.ts` for hooks
+- `*.validation.ts` for schemas
+- `*.types.ts` for types
+- `*.provider.tsx` for React providers
+
+## Boundary Summary
+
+- `modules` can call `services`.
+- `services` can call transport clients.
+- `components` stay reusable and feature-agnostic.
+- `lib` contains platform/system internals only.

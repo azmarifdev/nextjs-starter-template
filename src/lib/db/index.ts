@@ -1,21 +1,25 @@
+import type { Db } from "mongodb";
+
 import { appConfig } from "@/lib/config/app-config";
 import { getDrizzleClient } from "@/lib/db/providers/drizzle";
 import { getMongoDb } from "@/lib/db/providers/mongo";
-import { getPrismaClient } from "@/lib/db/providers/prisma";
 
-export async function getActiveDbProvider() {
+type PostgresClient = ReturnType<typeof getDrizzleClient>;
+
+export type ActiveDbProvider =
+  | { provider: "mongo"; client: Db | null }
+  | { provider: "postgres"; client: PostgresClient };
+
+export async function getActiveDbProvider(): Promise<ActiveDbProvider> {
   if (appConfig.dbProvider === "mongo") {
     return {
-      provider: "mongo" as const,
+      provider: "mongo",
       client: await getMongoDb()
     };
   }
 
   return {
-    provider: "postgres" as const,
-    client: getDrizzleClient(),
-    prisma: getPrismaClient()
+    provider: "postgres",
+    client: getDrizzleClient()
   };
 }
-
-export const db = getDrizzleClient();

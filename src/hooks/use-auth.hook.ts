@@ -5,7 +5,7 @@ import { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { authService } from "@/modules/auth/services/auth.service";
-import { useToast } from "@/providers/ToastProvider";
+import { useToast } from "@/providers/toast.provider";
 import { AppDispatch } from "@/store";
 import { RootState } from "@/store";
 import { clearAuthUser } from "@/store/slices/authSlice";

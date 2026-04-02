@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { resolveApiEndpoint } from "@/lib/config/runtime";
+import { assertExternalApiBaseUrlConfigured, resolveApiEndpoint } from "@/lib/config/runtime";
 import { ApiClientError } from "@/lib/errors/api-error";
 import type { ApiResponse } from "@/types/api";
 
@@ -40,6 +40,7 @@ restClient.interceptors.response.use(
 );
 
 export async function restGet<T>(path: string): Promise<ApiResponse<T>> {
+  assertExternalApiBaseUrlConfigured();
   const endpoint = resolveApiEndpoint(path);
   const { data } = await restClient.get<ApiResponse<T>>(endpoint);
   return data;
@@ -49,6 +50,7 @@ export async function restPost<T, TPayload = unknown>(
   path: string,
   payload?: TPayload
 ): Promise<ApiResponse<T>> {
+  assertExternalApiBaseUrlConfigured();
   const endpoint = resolveApiEndpoint(path);
   const { data } = await restClient.post<ApiResponse<T>>(endpoint, payload);
   return data;

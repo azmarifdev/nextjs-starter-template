@@ -5,4 +5,11 @@ export const API_PREFIX = `/api/${API_VERSION}`;
 export const AUTH_COOKIE_NAME = "auth_token";
 export const AUTH_SESSION_TTL_SECONDS = 60 * 60 * 24;
 
-export const DASHBOARD_ROUTES = ["/dashboard", "/users", "/projects", "/tasks"];
+export const DASHBOARD_ROUTES = [
+  "/dashboard",
+  "/users",
+  "/projects",
+  "/tasks",
+  "/ecommerce",
+  "/billing"
+];

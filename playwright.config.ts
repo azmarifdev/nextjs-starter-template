@@ -22,10 +22,14 @@ export default defineConfig({
     url: "http://127.0.0.1:3000",
     env: {
       ...process.env,
-      NEXT_PUBLIC_BACKEND_MODE: process.env.NEXT_PUBLIC_BACKEND_MODE?.trim() || "internal",
-      AUTH_SESSION_SECRET: process.env.AUTH_SESSION_SECRET?.trim() || "e2e-local-secret",
-      ALLOW_DEMO_AUTH: process.env.ALLOW_DEMO_AUTH?.trim() || "true",
-      ALLOW_INSECURE_DEV_AUTH: process.env.ALLOW_INSECURE_DEV_AUTH?.trim() || "true"
+      NEXT_PUBLIC_BACKEND_MODE: "internal",
+      NEXT_PUBLIC_API_MODE: "rest",
+      NEXT_PUBLIC_AUTH_PROVIDER: "custom",
+      NEXT_PUBLIC_API_BASE_URL: "http://127.0.0.1:3000",
+      NEXT_PUBLIC_SITE_URL: "http://127.0.0.1:3000",
+      AUTH_SESSION_SECRET: "e2e-local-secret",
+      ALLOW_DEMO_AUTH: "true",
+      ALLOW_INSECURE_DEV_AUTH: "true"
     },
     reuseExistingServer: !process.env.CI
   }

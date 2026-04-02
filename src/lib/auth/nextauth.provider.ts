@@ -2,7 +2,7 @@
 
 import { getSession, signIn, signOut } from "next-auth/react";
 
-import type { AuthPayload, AuthResponse } from "@/modules/auth/types";
+import type { AuthPayload, AuthResponse } from "@/modules/auth/auth.types";
 import type { User } from "@/types/user";
 
 function mapSessionUser(sessionUser: {
@@ -11,15 +11,17 @@ function mapSessionUser(sessionUser: {
   email?: string | null;
   role?: "admin" | "user";
 }): User {
+  const fallbackId = sessionUser.email ?? sessionUser.name ?? "nextauth-user";
+
   return {
-    id: sessionUser.id ?? crypto.randomUUID(),
+    id: sessionUser.id ?? fallbackId,
     name: sessionUser.name ?? "Unknown User",
     email: sessionUser.email ?? "unknown@example.com",
     role: sessionUser.role === "admin" ? "admin" : "user"
   };
 }
 
-export const nextAuthService = {
+export const nextAuthProvider = {
   async login(payload: AuthPayload): Promise<AuthResponse> {
     const result = await signIn("credentials", {
       email: payload.email,

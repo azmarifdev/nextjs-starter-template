@@ -3,11 +3,10 @@ import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
-import { findAuthUserByEmail, isAuthDatabaseConfigured } from "@/lib/auth-user.repository";
-import { appConfig } from "@/lib/config/app-config";
-import { tryDevAuthLogin } from "@/lib/dev-auth-fallback";
-import { env } from "@/lib/env";
-import { verifyPassword } from "@/lib/password";
+import { findAuthUserByEmail, isAuthDatabaseConfigured } from "@/lib/auth/auth-user.repository";
+import { tryDevAuthLogin } from "@/lib/auth/dev-auth-fallback";
+import { verifyPassword } from "@/lib/auth/password";
+import { env } from "@/lib/config/env";
 
 const providers: Provider[] = [
   Credentials({
@@ -95,7 +94,3 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
   debug: process.env.NODE_ENV !== "production"
 });
-
-export function isNextAuthEnabled(): boolean {
-  return appConfig.authProvider === "nextauth";
-}

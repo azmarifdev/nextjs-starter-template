@@ -1,9 +1,9 @@
 import { cookies } from "next/headers";
 
-import { apiError } from "@/lib/api-response";
 import { hasPermission } from "@/lib/auth/rbac";
-import { AUTH_COOKIE_NAME } from "@/lib/constants";
-import { verifySessionToken } from "@/lib/session";
+import { verifySessionToken } from "@/lib/auth/session";
+import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
+import { apiError } from "@/lib/utils/api-response";
 import type { Permission } from "@/types/auth";
 
 type SessionPayload = Awaited<ReturnType<typeof verifySessionToken>>;

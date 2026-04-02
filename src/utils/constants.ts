@@ -1,4 +1,4 @@
-import { siteConfig } from "@/lib/site-config";
+import { siteConfig } from "@/lib/config/site-config";
 
 export const APP_CONFIG = {
   name: siteConfig.name,
@@ -19,7 +19,6 @@ export const ROUTES = {
 } as const;
 
 export const API_ROUTES = {
-  health: "/api/v1/health",
   auth: {
     login: "/api/v1/auth/login",
     register: "/api/v1/auth/register",

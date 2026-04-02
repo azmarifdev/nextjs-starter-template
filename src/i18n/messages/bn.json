@@ -39,10 +39,16 @@
     "projectsSubtitle": "এক জায়গায় project progress, ownership এবং status ট্র্যাক করুন।",
     "tasksTitle": "টাস্ক ওয়ার্কফ্লো",
     "tasksSubtitle": "যেকোনো product বা operations টিমের কাজের queue মডেল করতে tasks ব্যবহার করুন।",
+    "ecommerceTitle": "ইকমার্স পারফরম্যান্স",
+    "ecommerceSubtitle": "অর্ডার এবং রেভিনিউ ট্রেন্ড দেখুন।",
+    "billingTitle": "বিলিং ইনসাইটস",
+    "billingSubtitle": "সাবস্ক্রিপশন ও recurring revenue ট্র্যাক করুন।",
     "overviewNav": "ওভারভিউ",
     "usersNav": "ইউজার",
     "projectsNav": "প্রজেক্ট",
-    "tasksNav": "টাস্ক"
+    "tasksNav": "টাস্ক",
+    "ecommerceNav": "ইকমার্স",
+    "billingNav": "বিলিং"
   },
   "users": {
     "loading": "ইউজার লোড হচ্ছে",
@@ -69,6 +75,18 @@
     "emptyTitle": "এখনও কোনো টাস্ক নেই",
     "emptyDescription": "ডেটা পাওয়া গেলে টাস্ক এখানে দেখাবে।",
     "errorTitle": "টাস্ক লোড করা যায়নি",
+    "errorDescription": "একটু পরে আবার চেষ্টা করুন।"
+  },
+  "ecommerce": {
+    "orders": "অর্ডার",
+    "revenue": "রেভিনিউ",
+    "errorTitle": "ইকমার্স সামারি লোড করা যায়নি",
+    "errorDescription": "একটু পরে আবার চেষ্টা করুন।"
+  },
+  "billing": {
+    "activePlans": "অ্যাকটিভ প্ল্যান",
+    "mrr": "MRR",
+    "errorTitle": "বিলিং সামারি লোড করা যায়নি",
     "errorDescription": "একটু পরে আবার চেষ্টা করুন।"
   }
 }

@@ -1,4 +1,4 @@
-import { verifyPassword } from "@/lib/password";
+import { verifyPassword } from "@/lib/auth/password";
 import type { User } from "@/types/user";
 
 interface DevAuthUser {
