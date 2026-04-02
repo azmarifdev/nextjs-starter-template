@@ -1,24 +1,24 @@
-export default function DashboardMainPage() {
+import { getTranslations } from "next-intl/server";
+
+export default async function DashboardMainPage() {
+  const t = await getTranslations("dashboard");
+
   return (
     <div className="stack">
       <section className="card">
-        <h1 className="card-title">Dashboard Overview</h1>
-        <p className="card-subtitle">
-          This is a domain-neutral starter template for SaaS, internal tools, and admin dashboards.
-        </p>
+        <h1 className="card-title">{t("overviewTitle")}</h1>
+        <p className="card-subtitle">{t("overviewSubtitle")}</p>
       </section>
 
       <section className="grid-two">
         <article className="card">
-          <h2 className="card-title text-title-sm">Projects at a glance</h2>
-          <p className="help-text">Track project progress, ownership, and status in one place.</p>
+          <h2 className="card-title text-title-sm">{t("projectsTitle")}</h2>
+          <p className="help-text">{t("projectsSubtitle")}</p>
         </article>
 
         <article className="card">
-          <h2 className="card-title text-title-sm">Task workflow</h2>
-          <p className="help-text">
-            Use tasks to model work queues for any product or operations team.
-          </p>
+          <h2 className="card-title text-title-sm">{t("tasksTitle")}</h2>
+          <p className="help-text">{t("tasksSubtitle")}</p>
         </article>
       </section>
     </div>

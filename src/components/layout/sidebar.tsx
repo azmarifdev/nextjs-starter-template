@@ -1,15 +1,20 @@
+"use client";
+
 import { BriefcaseBusiness, CheckSquare, LayoutDashboard, Users } from "lucide-react";
 import type { Route } from "next";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const links = [
-  { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
-  { href: "/users", label: "Users", icon: Users },
-  { href: "/projects", label: "Projects", icon: BriefcaseBusiness },
-  { href: "/tasks", label: "Tasks", icon: CheckSquare }
-];
+  { href: "/dashboard", key: "overviewNav", icon: LayoutDashboard },
+  { href: "/users", key: "usersNav", icon: Users },
+  { href: "/projects", key: "projectsNav", icon: BriefcaseBusiness },
+  { href: "/tasks", key: "tasksNav", icon: CheckSquare }
+] as const;
 
 export function Sidebar() {
+  const t = useTranslations("dashboard");
+
   return (
     <aside className="sidebar">
       <nav className="sidebar-nav">
@@ -20,7 +25,7 @@ export function Sidebar() {
               <span className="icon-inline icon-gap-sm">
                 <Icon size={16} />
               </span>
-              {item.label}
+              {t(item.key)}
             </Link>
           );
         })}

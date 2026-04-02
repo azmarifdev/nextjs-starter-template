@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { LangSwitcher } from "@/components/layout/lang-switcher";
 import { ThemeSwitcher } from "@/components/layout/theme-switcher";
@@ -10,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { APP_NAME } from "@/lib/constants";
 
 export function Navbar() {
+  const t = useTranslations("common");
   const router = useRouter();
   const { user, isAuthenticated, logout } = useAuth();
 
@@ -33,12 +35,12 @@ export function Navbar() {
             <>
               <span className="badge">{user?.name}</span>
               <Button variant="danger" onClick={handleLogout}>
-                Logout
+                {t("logout")}
               </Button>
             </>
           ) : (
             <Link href="/login" className="link-inline">
-              Login
+              {t("login")}
             </Link>
           )}
         </div>

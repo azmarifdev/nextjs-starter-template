@@ -7,6 +7,5 @@ export interface AuthPayload {
 }
 
 export interface AuthResponse {
-  token: string;
   user: User;
 }

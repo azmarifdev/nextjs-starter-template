@@ -36,7 +36,7 @@ This repository is designed so a team can:
 
 - Next.js App Router + React + TypeScript baseline.
 - Modular app structure under `src/` for long-term maintainability.
-- Authentication foundation with NextAuth.
+- Authentication foundation with signed HTTP-only session cookies.
 - Runtime validation and schema safety with Zod.
 - SQL-ready layer with Drizzle ORM.
 - Domain-neutral service layer scaffold for API integrations.
@@ -50,7 +50,7 @@ This repository is designed so a team can:
 - `ESLint + Prettier`: ensures consistent style and avoids review noise.
 - `Husky + lint-staged`: blocks low-quality changes before they are committed.
 - `Commitlint + semantic PR title`: enforces machine-readable commit history.
-- `Jest + Vitest + Playwright`: combines fast unit feedback with browser-level confidence.
+- `Vitest + React Testing Library + Playwright`: combines fast unit feedback with browser-level confidence.
 - `Release Please`: automates changelog, version bump, release PR, and tags.
 - `Dependabot + dependency review`: keeps dependencies updated with security visibility.
 - `CodeQL`: static security analysis in CI.
@@ -64,7 +64,6 @@ This repository is designed so a team can:
 - TypeScript 5
 - Tailwind CSS 4
 - Redux Toolkit
-- NextAuth
 - Zod
 - Drizzle ORM
 
@@ -80,8 +79,7 @@ This repository is designed so a team can:
 
 ### Test Stack
 
-- Jest + React Testing Library
-- Vitest
+- Vitest + React Testing Library
 - Playwright
 
 ### CI/CD and Automation
@@ -149,7 +147,6 @@ npm run lint
 npm run typecheck
 npm run format:check
 npm run test
-npm run test:vitest
 npm run build
 ```
 
@@ -197,9 +194,8 @@ Recommended practice:
 
 ### Testing
 
-- `npm run test`: run Jest tests.
-- `npm run test:watch`: Jest watch mode.
-- `npm run test:vitest`: run Vitest tests.
+- `npm run test`: run Vitest unit tests.
+- `npm run test:watch`: Vitest watch mode.
 - `npm run test:coverage`: Vitest coverage report.
 - `npm run e2e`: Playwright end-to-end tests.
 - `npm run e2e:ui`: Playwright interactive mode.
@@ -278,14 +274,13 @@ npm run db:studio
 
 ## 12. Testing Strategy
 
-- Use Jest for component and unit behavior.
-- Use Vitest for fast utility-level checks.
+- Use Vitest + React Testing Library for unit and component behavior.
 - Use Playwright for browser-level end-to-end flows.
 
 Suggested CI-parity local check before PR:
 
 ```bash
-npm run lint && npm run typecheck && npm run format:check && npm run test && npm run test:vitest && npm run build
+npm run lint && npm run typecheck && npm run format:check && npm run test && npm run build
 ```
 
 ## 13. GitHub Automation Overview

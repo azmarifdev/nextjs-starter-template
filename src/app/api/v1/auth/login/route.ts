@@ -1,39 +1,35 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { AUTH_COOKIE_NAME, USER_COOKIE_NAME } from "@/lib/constants";
+import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/constants";
+import { verifyDemoUserCredentials } from "@/lib/demo-auth-store";
+import { createSessionToken } from "@/lib/session";
 import { loginSchema } from "@/modules/auth/validation";
 
 export async function POST(request: NextRequest) {
-  const payload = await request.json();
+  const payload = await request.json().catch(() => null);
   const parsed = loginSchema.safeParse(payload);
 
   if (!parsed.success) {
     return NextResponse.json({ message: "Invalid credentials format" }, { status: 400 });
   }
 
-  const user = {
-    id: crypto.randomUUID(),
-    name: parsed.data.email.split("@")[0],
-    email: parsed.data.email
-  };
+  const user = verifyDemoUserCredentials(parsed.data.email, parsed.data.password);
+  if (!user) {
+    return NextResponse.json({ message: "Invalid email or password" }, { status: 401 });
+  }
 
-  const token = `token_${crypto.randomUUID()}`;
-  const response = NextResponse.json({ token, user });
+  const token = await createSessionToken(
+    { sub: user.id, name: user.name, email: user.email },
+    AUTH_SESSION_TTL_SECONDS
+  );
+  const response = NextResponse.json({ user });
 
   response.cookies.set(AUTH_COOKIE_NAME, token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "strict",
     path: "/",
-    maxAge: 60 * 60 * 24
-  });
-
-  response.cookies.set(USER_COOKIE_NAME, JSON.stringify(user), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24
+    maxAge: AUTH_SESSION_TTL_SECONDS
   });
 
   return response;

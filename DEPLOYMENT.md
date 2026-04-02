@@ -23,7 +23,6 @@ npm run lint
 npm run typecheck
 npm run format:check
 npm run test
-npm run test:vitest
 npm run build
 ```
 
@@ -83,11 +82,8 @@ All three should use the same runtime env keys from `.env.example`.
 
 Typical required keys:
 
-- `NEXTAUTH_URL`
-- `NEXTAUTH_SECRET`
+- `AUTH_SESSION_SECRET`
 - `DATABASE_URL`
-- `GITHUB_CLIENT_ID`
-- `GITHUB_CLIENT_SECRET`
 - `NEXT_PUBLIC_APP_NAME`
 - `NEXT_PUBLIC_API_BASE_URL`
 - `NEXT_PUBLIC_SITE_URL` (recommended for correct sitemap/metadata URL)
