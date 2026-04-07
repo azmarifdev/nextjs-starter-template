@@ -1,4 +1,4 @@
-import { env } from "@/lib/env";
+import { env } from "@/lib/config/env";
 
 const fallbackUrl = "http://localhost:3000";
 

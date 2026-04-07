@@ -1,8 +1,9 @@
-import { requireInternalBackend } from "@/lib/api/internal-backend";
-import { withApiHandler } from "@/lib/api-handler";
-import { apiSuccess, resolveRequestId } from "@/lib/api-response";
-import { AUTH_COOKIE_NAME } from "@/lib/constants";
+import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
+import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
 import { requireSameOrigin } from "@/lib/security/request-origin";
+import { apiSuccess, resolveRequestId } from "@/lib/utils/api-response";
+
+import { requireCustomAuthProvider, requireInternalBackend, withApiHandler } from "../route-utils";
 
 async function logoutHandler(request: Request): Promise<Response> {
   const requestId = resolveRequestId(request.headers);
@@ -10,6 +11,10 @@ async function logoutHandler(request: Request): Promise<Response> {
   const backendError = requireInternalBackend({ requestId, route });
   if (backendError) {
     return backendError;
+  }
+  const providerError = requireCustomAuthProvider({ requestId, route });
+  if (providerError) {
+    return providerError;
   }
 
   const originError = requireSameOrigin(request, { requestId, route });
@@ -21,7 +26,7 @@ async function logoutHandler(request: Request): Promise<Response> {
 
   response.cookies.set(AUTH_COOKIE_NAME, "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: shouldUseSecureCookies(),
     sameSite: "strict",
     expires: new Date(0),
     path: "/"

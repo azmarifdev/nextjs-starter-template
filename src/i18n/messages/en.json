@@ -39,10 +39,16 @@
     "projectsSubtitle": "Track project progress, ownership, and status in one place.",
     "tasksTitle": "Task workflow",
     "tasksSubtitle": "Use tasks to model work queues for any product or operations team.",
+    "ecommerceTitle": "Ecommerce performance",
+    "ecommerceSubtitle": "Monitor orders and revenue signals.",
+    "billingTitle": "Billing insights",
+    "billingSubtitle": "Track subscription and recurring revenue metrics.",
     "overviewNav": "Overview",
     "usersNav": "Users",
     "projectsNav": "Projects",
-    "tasksNav": "Tasks"
+    "tasksNav": "Tasks",
+    "ecommerceNav": "Ecommerce",
+    "billingNav": "Billing"
   },
   "users": {
     "loading": "Loading users",
@@ -69,6 +75,18 @@
     "emptyTitle": "No tasks yet",
     "emptyDescription": "Tasks will appear here when data is available.",
     "errorTitle": "Unable to load tasks",
+    "errorDescription": "Please retry in a moment."
+  },
+  "ecommerce": {
+    "orders": "Orders",
+    "revenue": "Revenue",
+    "errorTitle": "Unable to load ecommerce summary",
+    "errorDescription": "Please retry in a moment."
+  },
+  "billing": {
+    "activePlans": "Active plans",
+    "mrr": "MRR",
+    "errorTitle": "Unable to load billing summary",
     "errorDescription": "Please retry in a moment."
   }
 }

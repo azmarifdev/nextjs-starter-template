@@ -1,81 +1,74 @@
 # Architecture
 
-This template is a config-driven Next.js App Router platform for SaaS, ecommerce, and admin products.
+This template is a production-ready Next.js App Router frontend designed to consume an external backend by default.
 
-## Core Principle
+## Goals
 
-All platform decisions are controlled by `appConfig` in `src/lib/config/app-config.ts`.
+- clean and predictable boundaries
+- minimal abstractions with clear ownership
+- config-driven behavior without hidden coupling
+- scalable for SaaS-style modules
 
-```ts
-export const appConfig = {
-  apiMode: "rest", // rest | graphql
-  backendMode: "external", // external | internal
-  dbProvider: "mongo", // mongo | postgres
-  authProvider: "custom", // custom | nextauth
-  features: {
-    ecommerce: true,
-    billing: true,
-    admin: true
-  }
-};
-```
+## Architecture Rules
 
-## Layered Architecture
-
-- `src/components/*`: reusable UI primitives and shared visual components.
-- `src/modules/*`: business features (components, hooks, services, types, validation).
-- `src/services/*`: transport and API client layer (`rest/`, `graphql/`, orchestration client).
-- `src/lib/*`: system internals (config, db providers, auth internals, security, observability).
-- `src/providers/*`: global React providers (theme, query, auth, state, toast).
+- `src/modules/*`: business features only (feature UI, hooks, validation, feature services)
+- `src/components/*`: reusable UI only
+- `src/services/*`: API communication only (`apiClient`, `rest`, `graphql`)
+- `src/lib/*`: system-level concerns only (config, auth core, db adapters, security, observability, utils)
+- `src/providers/*`: global app providers only, composed once in `src/providers/index.tsx`
 
 ## Data Flow
 
-`Page -> Module -> Service -> API Layer -> Backend`
+`Page -> Module -> Service -> API -> Backend`
 
-No direct `fetch`/`axios` calls are made from UI components.
+UI does not call transport clients directly.
 
 ## API Strategy
 
-- REST is default.
-- GraphQL is optional via the same client abstraction.
-- External backend is default.
-- Internal Next.js API routes are optional and guarded by backend mode.
+- External backend is the default mode (`NEXT_PUBLIC_BACKEND_MODE=external`).
+- Frontend does not define business APIs.
+- Next.js route handlers are kept only for auth provider support:
+  - `src/app/api/auth/[...nextauth]/route.ts`
+  - `src/app/api/v1/auth/*`
+- Business endpoints such as projects/tasks/users/billing/ecommerce are consumed from the external backend through `src/services/*`.
 
-## Database Strategy
+## Config System
 
-Database provider abstraction lives in:
+Runtime platform configuration is centralized in:
 
-- `src/lib/db/index.ts`
-- `src/lib/db/providers/mongo.ts`
-- `src/lib/db/providers/drizzle.ts`
-- `src/lib/db/providers/prisma.ts`
+- `src/lib/config/app-config.ts`
+- `src/lib/config/runtime.ts`
+- `src/lib/config/validate.ts`
 
-MongoDB is the default provider. PostgreSQL (Drizzle) is optional.
+Important switches:
 
-## Authentication Strategy
+- `apiMode`: `rest | graphql`
+- `backendMode`: `external | internal` (external default)
+- `dbProvider`: `mongo | postgres` (mongo default)
+- `authProvider`: `custom | nextauth`
 
-Two auth providers are supported through one interface:
+## Auth Architecture
 
-- `custom` (default): internal JWT + refresh flow (or external backend custom auth).
-- `nextauth` (optional): NextAuth credentials + optional Google OAuth.
+- `src/modules/auth/*`: auth UI and feature orchestration.
+- `src/lib/auth/*`: core provider implementations and internals.
+- Active provider is selected by config through `src/lib/auth/auth.provider.ts`.
 
-## Feature Flags
+## Database Architecture
 
-Feature toggles are controlled by `appConfig.features` and enforced in:
+- Active provider is selected once at runtime via `NEXT_PUBLIC_DB_PROVIDER`.
+- MongoDB is default.
+- PostgreSQL is optional.
+- DB adapters are isolated to `src/lib/db/providers/*`.
 
-- UI navigation and rendering.
-- Route proxy/middleware checks.
-- API handlers.
+## Provider Composition
 
-## Error Handling
+`src/providers/index.tsx` is the single composition entry for all global providers and is used once in the root layout.
 
-- Unified API response envelope (`ApiResponse<T>`).
-- Central response normalization in service clients.
-- Global error boundary in `src/app/global-error.tsx`.
-- Module-level empty/error/loading states.
+## Deployment Model
 
-## Testing
+Docker-first deployment is canonical:
 
-- Unit and integration: Vitest.
-- End-to-end: Playwright.
-- Jest removed.
+- `Dockerfile`
+- `docker-compose.yml`
+
+Cloud-provider notes are documentation-only (`docs/deployment/cloud-providers.md`).

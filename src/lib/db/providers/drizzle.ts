@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/neon-http";
 
-import { env } from "@/lib/env";
+import { env } from "@/lib/config/env";
 
 export function getDrizzleClient() {
   if (!env.DATABASE_URL) {
