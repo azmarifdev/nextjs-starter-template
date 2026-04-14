@@ -6,16 +6,21 @@ describe("mode guards", () => {
   const originalEnv = {
     NEXT_PUBLIC_AUTH_PROVIDER: process.env.NEXT_PUBLIC_AUTH_PROVIDER,
     NEXT_PUBLIC_BACKEND_MODE: process.env.NEXT_PUBLIC_BACKEND_MODE,
-    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    NEXT_PUBLIC_API_MODE: process.env.NEXT_PUBLIC_API_MODE,
+    ALLOW_DEMO_AUTH: process.env.ALLOW_DEMO_AUTH,
+    AUTH_SESSION_SECRET: process.env.AUTH_SESSION_SECRET,
+    NODE_ENV: process.env.NODE_ENV
   };
+  const mutableEnv = process.env as Record<string, string | undefined>;
 
-  function restoreEnv(key: keyof typeof originalEnv, value: string | undefined): void {
+  function restoreEnv(key: string, value: string | undefined): void {
     if (value === undefined) {
-      delete process.env[key];
+      delete mutableEnv[key];
       return;
     }
 
-    process.env[key] = value;
+    mutableEnv[key] = value;
   }
 
   beforeEach(() => {
@@ -23,6 +28,10 @@ describe("mode guards", () => {
     restoreEnv("NEXT_PUBLIC_AUTH_PROVIDER", originalEnv.NEXT_PUBLIC_AUTH_PROVIDER);
     restoreEnv("NEXT_PUBLIC_BACKEND_MODE", originalEnv.NEXT_PUBLIC_BACKEND_MODE);
     restoreEnv("NEXT_PUBLIC_API_BASE_URL", originalEnv.NEXT_PUBLIC_API_BASE_URL);
+    restoreEnv("NEXT_PUBLIC_API_MODE", originalEnv.NEXT_PUBLIC_API_MODE);
+    restoreEnv("ALLOW_DEMO_AUTH", originalEnv.ALLOW_DEMO_AUTH);
+    restoreEnv("AUTH_SESSION_SECRET", originalEnv.AUTH_SESSION_SECRET);
+    restoreEnv("NODE_ENV", originalEnv.NODE_ENV);
   });
 
   it("returns 404 for NextAuth route when authProvider=custom", async () => {
@@ -85,6 +94,21 @@ describe("mode guards", () => {
 
     await expect(restGet("/users")).rejects.toThrow(
       "NEXT_PUBLIC_API_BASE_URL is required when NEXT_PUBLIC_BACKEND_MODE=external"
+    );
+  });
+
+  it("fails fast for unsupported internal custom auth GraphQL mode", async () => {
+    process.env.NEXT_PUBLIC_BACKEND_MODE = "internal";
+    process.env.NEXT_PUBLIC_AUTH_PROVIDER = "custom";
+    process.env.NEXT_PUBLIC_API_MODE = "graphql";
+    process.env.ALLOW_DEMO_AUTH = "true";
+    process.env.AUTH_SESSION_SECRET = "test-secret";
+    mutableEnv.NODE_ENV = "development";
+
+    const { validateRuntimeConfig } = await import("@/lib/config/validate");
+
+    expect(() => validateRuntimeConfig()).toThrow(
+      "NEXT_PUBLIC_API_MODE=graphql is not supported with internal custom auth"
     );
   });
 });
