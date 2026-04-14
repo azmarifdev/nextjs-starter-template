@@ -81,7 +81,7 @@
     "@vitest/coverage-v8": "^4.1.4",
     "codehawk-cli": "^10.1.0",
     "drizzle-kit": "^0.31.10",
-    "eslint": "10.1.0",
+    "eslint": "^9.0.0",
     "eslint-config-next": "16.2.3",
     "eslint-plugin-simple-import-sort": "^13.0.0",
     "husky": "^9.1.7",
@@ -104,8 +104,5 @@
     "*.{css,json,md,mdx}": [
       "prettier --write"
     ]
-  },
-  "overrides": {
-    "eslint": "10.1.0"
   }
 }

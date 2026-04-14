@@ -12,14 +12,15 @@ describe("mode guards", () => {
     AUTH_SESSION_SECRET: process.env.AUTH_SESSION_SECRET,
     NODE_ENV: process.env.NODE_ENV
   };
+  const mutableEnv = process.env as Record<string, string | undefined>;
 
-  function restoreEnv(key: keyof typeof originalEnv, value: string | undefined): void {
+  function restoreEnv(key: string, value: string | undefined): void {
     if (value === undefined) {
-      delete process.env[key];
+      delete mutableEnv[key];
       return;
     }
 
-    process.env[key] = value;
+    mutableEnv[key] = value;
   }
 
   beforeEach(() => {
@@ -102,7 +103,7 @@ describe("mode guards", () => {
     process.env.NEXT_PUBLIC_API_MODE = "graphql";
     process.env.ALLOW_DEMO_AUTH = "true";
     process.env.AUTH_SESSION_SECRET = "test-secret";
-    process.env.NODE_ENV = "development";
+    mutableEnv.NODE_ENV = "development";
 
     const { validateRuntimeConfig } = await import("@/lib/config/validate");
 
