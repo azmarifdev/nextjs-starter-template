@@ -1,69 +1,37 @@
 # Package Manager Policy and Migration Guide
 
-Use this guide for two cases:
+## Default Policy
 
-1. Working in this repository with npm/pnpm/yarn/bun support
-2. Migrating your fork to a single canonical package manager policy
+This template is pnpm-first.
 
-## Current Baseline in This Template
+- `packageManager` is set to pnpm in `package.json`.
+- `pnpm-lock.yaml` is the canonical lockfile.
+- Default CI uses pnpm.
 
-- `packageManager` field is intentionally unset to allow npm/pnpm/yarn/bun
-- CI quality jobs run via npm
-- Lockfile consistency workflow validates npm/pnpm/yarn (and bun if bun lockfile exists)
+## Why This Policy
 
-## Local Usage (Any Supported Manager)
+Using one default manager reduces onboarding friction and lockfile drift.
 
-Use one manager per local workflow session:
+## Migration Paths (Optional)
 
-- npm: `npm ci`
-- pnpm: `pnpm install --frozen-lockfile`
-- yarn: `yarn install --frozen-lockfile --non-interactive`
-- bun: `bun install --frozen-lockfile`
+If your team requires a different manager, migrate in a dedicated PR.
 
-If dependencies change, keep lockfiles consistent before opening PR.
+### Target: npm
 
-## Migrating Your Fork to One Canonical Manager
-
-Migrate only if your team wants a single enforced manager policy.
-
-### Target: pnpm
-
-1. (Optional) Set `package.json -> packageManager` to pnpm version if your team wants strict enforcement
-2. Remove non-target lockfiles your team will no longer maintain
-3. Regenerate target lockfile
-4. Update CI install commands and caches for pnpm
-5. Update docs and contributing instructions
-6. Run full validation
+1. Update `packageManager` in `package.json`.
+2. Generate `package-lock.json`.
+3. Update CI install/build commands.
+4. Update docs and onboarding commands.
 
 ### Target: yarn
 
-1. (Optional) Set `package.json -> packageManager` to yarn version if your team wants strict enforcement
-2. Remove non-target lockfiles your team will no longer maintain
-3. Regenerate target lockfile
-4. Update CI install commands and caches for yarn
-5. Update docs and contributing instructions
-6. Run full validation
+1. Update `packageManager` in `package.json`.
+2. Generate `yarn.lock`.
+3. Update CI install/build commands.
+4. Update docs and onboarding commands.
 
-### Target: bun
+## Safety Checklist
 
-1. (Optional) Set `package.json -> packageManager` to bun version if your team wants strict enforcement
-2. Generate and commit bun lockfile (`bun.lock` or `bun.lockb`)
-3. Update CI jobs to use bun as primary quality pipeline
-4. Update docs and contributing instructions
-5. Run full validation
-
-## Recommended Safety Checks (Any Migration)
-
-- Keep migration in a dedicated PR.
-- Include lockfile + workflow + docs updates in the same PR.
-- Ensure branch protection requires install/build checks.
-- Verify `nvm use` + CI Node version remain aligned.
-
-## Long-Term Node Policy
-
-For reproducibility over years:
-
-- Keep `.nvmrc` pinned to current tested LTS baseline.
-- Keep `engines.node` as supported compatibility range.
-- Test at least one current LTS in CI.
-- On LTS upgrades, update `.nvmrc`, CI Node version, and docs together.
+- Keep lockfile + workflow + docs updates in one PR.
+- Verify clean install and build in CI.
+- Align `.nvmrc`, `engines.node`, and CI Node version.

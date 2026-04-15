@@ -30,7 +30,7 @@ This guide does not cover:
 ## Runtime Baseline
 
 - Node.js: `22.x` (from `.nvmrc`)
-- npm: `10.x` (default CI manager)
+- pnpm: `10.x` (default manager and CI baseline)
 - Engine compatibility: `package.json -> engines.node` (`>=20 <23`)
 
 Recommendation:
@@ -43,21 +43,19 @@ Run from a clean branch before deployment:
 
 ```bash
 nvm use
-npm ci
-npm run lint
-npm run typecheck
-npm run format:check
-npm run test
-npm run build
+pnpm install --frozen-lockfile
+pnpm lint
+pnpm typecheck
+pnpm format:check
+pnpm test
+pnpm build
 ```
 
 If any step fails, do not deploy.
 
-Equivalent install step also works with:
+Alternative managers can be adopted through a dedicated migration policy:
 
-- `pnpm install --frozen-lockfile`
-- `yarn install --frozen-lockfile --non-interactive`
-- `bun install --frozen-lockfile`
+- see `docs/migrations/package-manager.md`
 
 ## Deployment Paths
 
@@ -82,7 +80,7 @@ docker compose --profile db up --build
 
 ### Vercel (Optional)
 
-- `vercel.json` is configured for npm-based install/build commands.
+- `vercel.json` is configured for pnpm-based install/build commands.
 
 ## Environment Checklist (Production)
 

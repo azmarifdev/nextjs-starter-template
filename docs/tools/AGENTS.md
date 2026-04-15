@@ -29,17 +29,17 @@ These instructions apply to all automated or semi-automated agents working in th
 Use this default verification set:
 
 ```bash
-npm run lint
-npm run typecheck
-npm run format:check
-npm run test
-npm run build
+pnpm lint
+pnpm typecheck
+pnpm format:check
+pnpm test
+pnpm build
 ```
 
 For user journey changes, also run:
 
 ```bash
-npm run e2e
+pnpm e2e
 ```
 
 Equivalent manager-specific commands are acceptable if lockfiles remain consistent.

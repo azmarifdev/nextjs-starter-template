@@ -21,6 +21,10 @@ This guide covers:
 - Release failure diagnostics
 - Manual fallback process
 
+Prerequisite:
+
+- Advanced CI templates must be installed (`pnpm setup:ci -- --advanced`) so `release-please.yml` exists in `.github/workflows/`.
+
 This guide does not duplicate:
 
 - GitHub protection setup checklist (`docs/guides/github-setup-checklist.md`)
@@ -106,8 +110,8 @@ After release PR merge:
 
 ```bash
 nvm use
-npm ci
-npm run build
+pnpm install --frozen-lockfile
+pnpm build
 ```
 
 If install/build fails in clean state, stop and open a follow-up hotfix PR.

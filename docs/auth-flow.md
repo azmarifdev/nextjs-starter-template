@@ -1,20 +1,25 @@
 # Auth Flow
 
-## Custom Auth Provider
+## Default (Custom Auth)
 
-1. User submits `AuthForm`.
-2. `modules/auth/hooks/use-auth-form.hook.ts` runs mutation via `authService`.
-3. `modules/auth/services/auth.service.ts` uses `lib/auth/auth.provider.ts`.
-4. `lib/auth/custom-auth.provider.ts` calls backend auth endpoints through `services/apiClient.ts`.
-5. Session state is synced through `providers/auth.provider.tsx`.
+1. User submits auth form.
+2. `modules/auth` calls `authService`.
+3. `authService` resolves provider from `lib/auth/providers/auth.provider.ts`.
+4. `custom-auth.provider.ts` uses API transport to call auth endpoints.
+5. Session is validated through `lib/auth/session/*`.
 
-## NextAuth Provider
+## Optional (NextAuth)
 
-1. `NEXT_PUBLIC_AUTH_PROVIDER=nextauth` switches active auth provider.
-2. Requests flow through `src/app/api/auth/[...nextauth]/route.ts`.
-3. Core NextAuth config lives in `src/lib/auth/nextauth.ts`.
+1. Set `NEXT_PUBLIC_AUTH_PROVIDER=nextauth`.
+2. Auth requests route through `src/app/api/auth/[...nextauth]/route.ts`.
+3. NextAuth server config is in `src/lib/auth/providers/nextauth.ts`.
 
-## Route Guards
+## Demo Auth Security Rule
 
-- Route-level protection is enforced in `src/proxy.ts`.
-- Permission checks use RBAC utilities in `src/lib/auth/rbac.ts`.
+Demo fallback is only allowed when:
+
+```env
+ALLOW_DEMO_AUTH=true
+```
+
+Otherwise authentication fallback is denied.
