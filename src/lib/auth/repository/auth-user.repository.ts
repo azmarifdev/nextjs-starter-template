@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 
-import type { AuthAdapter, AuthUserRecord } from "@/lib/auth/adapter";
+import type { AuthAdapter, AuthUserRecord } from "@/lib/auth/repository/adapter";
 import { appConfig } from "@/lib/config/app-config";
 import { getDrizzleClient } from "@/lib/db/providers/drizzle";
 import { getMongoDb } from "@/lib/db/providers/mongo";
@@ -264,7 +264,7 @@ function getActiveAdapter(): AuthAdapter {
   return adapters[appConfig.dbProvider];
 }
 
-export type { AuthAdapter, AuthUserRecord } from "@/lib/auth/adapter";
+export type { AuthAdapter, AuthUserRecord } from "@/lib/auth/repository/adapter";
 
 export function getAuthAdapter(): AuthAdapter {
   return getActiveAdapter();

@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 
-import { hasPermission } from "@/lib/auth/rbac";
-import { verifySessionToken } from "@/lib/auth/session";
+import { hasPermission } from "@/lib/auth/policy/rbac";
+import { verifySessionToken } from "@/lib/auth/session/session";
 import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
 import { apiError } from "@/lib/utils/api-response";
 import type { Permission } from "@/types/auth";

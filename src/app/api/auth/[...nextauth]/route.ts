@@ -11,7 +11,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     return nextAuthDisabledResponse();
   }
 
-  const { handlers } = await import("@/lib/auth/nextauth");
+  const { handlers } = await import("@/lib/auth/providers/nextauth");
   return handlers.GET(request);
 }
 
@@ -20,6 +20,6 @@ export async function POST(request: NextRequest): Promise<Response> {
     return nextAuthDisabledResponse();
   }
 
-  const { handlers } = await import("@/lib/auth/nextauth");
+  const { handlers } = await import("@/lib/auth/providers/nextauth");
   return handlers.POST(request);
 }

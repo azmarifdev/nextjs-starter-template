@@ -107,8 +107,6 @@ describe("mode guards", () => {
 
     const { validateRuntimeConfig } = await import("@/lib/config/validate");
 
-    expect(() => validateRuntimeConfig()).toThrow(
-      "NEXT_PUBLIC_API_MODE=graphql is not supported with internal custom auth"
-    );
+    expect(() => validateRuntimeConfig()).toThrow("Unsupported configuration");
   });
 });

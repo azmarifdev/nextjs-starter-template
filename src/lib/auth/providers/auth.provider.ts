@@ -1,5 +1,5 @@
-import { customAuthProvider } from "@/lib/auth/custom-auth.provider";
-import { nextAuthProvider } from "@/lib/auth/nextauth.provider";
+import { customAuthProvider } from "@/lib/auth/providers/custom-auth.provider";
+import { nextAuthProvider } from "@/lib/auth/providers/nextauth.provider";
 import { appConfig } from "@/lib/config/app-config";
 import type { AuthPayload, AuthResponse } from "@/modules/auth/auth.types";
 import type { User } from "@/types/user";

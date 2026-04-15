@@ -5,10 +5,10 @@ import {
   createAuthUser,
   findAuthUserByEmail,
   isAuthDatabaseConfigured
-} from "@/lib/auth/auth-user.repository";
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
-import { hashPassword } from "@/lib/auth/password";
-import { createSessionToken } from "@/lib/auth/session";
+} from "@/lib/auth/repository/auth-user.repository";
+import { shouldUseSecureCookies } from "@/lib/auth/session/cookie-security";
+import { hashPassword } from "@/lib/auth/session/password";
+import { createSessionToken } from "@/lib/auth/session/session";
 import { appConfig } from "@/lib/config/app-config";
 import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/config/constants";
 import { setRequestIdHeader } from "@/lib/observability/request-id";

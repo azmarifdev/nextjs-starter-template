@@ -1,18 +1,26 @@
 import { appConfig } from "@/lib/config/app-config";
 import { env } from "@/lib/config/env";
+import { findSupportedCombination } from "@/lib/config/supported-combinations";
 
 let validated = false;
 
 function collectErrors(): string[] {
   const errors: string[] = [];
 
-  if (appConfig.backendMode === "internal" && appConfig.authProvider === "custom") {
-    if (appConfig.apiMode === "graphql") {
-      errors.push(
-        "NEXT_PUBLIC_API_MODE=graphql is not supported with internal custom auth because no internal /graphql route is provided. Use NEXT_PUBLIC_API_MODE=rest or configure an external GraphQL backend."
-      );
-    }
+  const supportedCombination = findSupportedCombination({
+    backendMode: appConfig.backendMode,
+    authProvider: appConfig.authProvider,
+    apiMode: appConfig.apiMode,
+    dbProvider: appConfig.dbProvider
+  });
 
+  if (!supportedCombination) {
+    errors.push(
+      `Unsupported configuration: backendMode=${appConfig.backendMode}, authProvider=${appConfig.authProvider}, apiMode=${appConfig.apiMode}, dbProvider=${appConfig.dbProvider}. See docs/config-combinations.md for supported profiles.`
+    );
+  }
+
+  if (appConfig.backendMode === "internal" && appConfig.authProvider === "custom") {
     const allowDemoAuth = process.env.ALLOW_DEMO_AUTH === "true";
     const hasSessionSecret = Boolean(
       env.AUTH_SESSION_SECRET?.trim() || env.AUTH_SESSION_SECRETS?.trim()

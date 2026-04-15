@@ -1,4 +1,4 @@
-import { requireSession } from "@/lib/auth/session-guard";
+import { requireSession } from "@/lib/auth/session/session-guard";
 import { apiSuccess, resolveRequestId } from "@/lib/utils/api-response";
 
 import { requireCustomAuthProvider, requireInternalBackend, withApiHandler } from "../route-utils";

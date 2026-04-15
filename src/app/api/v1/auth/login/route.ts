@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { tryDevAuthLogin } from "@/lib/auth/policy/dev-auth-fallback";
 import {
   findAuthUserByEmail,
   isAuthDatabaseConfigured,
   recordFailedLoginAttempt,
   resetFailedLoginAttempts
-} from "@/lib/auth/auth-user.repository";
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
-import { tryDevAuthLogin } from "@/lib/auth/dev-auth-fallback";
-import { verifyPassword } from "@/lib/auth/password";
-import { createSessionToken } from "@/lib/auth/session";
+} from "@/lib/auth/repository/auth-user.repository";
+import { shouldUseSecureCookies } from "@/lib/auth/session/cookie-security";
+import { verifyPassword } from "@/lib/auth/session/password";
+import { createSessionToken } from "@/lib/auth/session/session";
 import { appConfig } from "@/lib/config/app-config";
 import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/config/constants";
 import { logger } from "@/lib/observability/logger";

@@ -3,9 +3,12 @@ import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 
-import { findAuthUserByEmail, isAuthDatabaseConfigured } from "@/lib/auth/auth-user.repository";
-import { tryDevAuthLogin } from "@/lib/auth/dev-auth-fallback";
-import { verifyPassword } from "@/lib/auth/password";
+import { tryDevAuthLogin } from "@/lib/auth/policy/dev-auth-fallback";
+import {
+  findAuthUserByEmail,
+  isAuthDatabaseConfigured
+} from "@/lib/auth/repository/auth-user.repository";
+import { verifyPassword } from "@/lib/auth/session/password";
 import { env } from "@/lib/config/env";
 
 const providers: Provider[] = [
@@ -40,6 +43,10 @@ const providers: Provider[] = [
           email: user.email,
           role: user.role
         };
+      }
+
+      if (process.env.ALLOW_DEMO_AUTH !== "true") {
+        return null;
       }
 
       const fallbackResult = await tryDevAuthLogin({ email, password });

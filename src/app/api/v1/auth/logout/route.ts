@@ -1,4 +1,4 @@
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
+import { shouldUseSecureCookies } from "@/lib/auth/session/cookie-security";
 import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
 import { requireSameOrigin } from "@/lib/security/request-origin";
 import { apiSuccess, resolveRequestId } from "@/lib/utils/api-response";

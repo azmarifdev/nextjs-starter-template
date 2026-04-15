@@ -1,6 +1,6 @@
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
-import { createSessionToken } from "@/lib/auth/session";
-import { requireSession } from "@/lib/auth/session-guard";
+import { shouldUseSecureCookies } from "@/lib/auth/session/cookie-security";
+import { createSessionToken } from "@/lib/auth/session/session";
+import { requireSession } from "@/lib/auth/session/session-guard";
 import { AUTH_COOKIE_NAME, AUTH_SESSION_TTL_SECONDS } from "@/lib/config/constants";
 import { requireSameOrigin } from "@/lib/security/request-origin";
 import { apiSuccess, resolveRequestId } from "@/lib/utils/api-response";

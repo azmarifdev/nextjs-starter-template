@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from "vitest";
 
-import { createSessionToken, verifySessionToken } from "@/lib/auth/session";
+import { createSessionToken, verifySessionToken } from "@/lib/auth/session/session";
 
 describe("session token", () => {
   const original = {

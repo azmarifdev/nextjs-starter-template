@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { shouldUseSecureCookies } from "@/lib/auth/cookie-security";
-import { hasPermission } from "@/lib/auth/rbac";
-import { verifySessionToken } from "@/lib/auth/session";
+import { hasPermission } from "@/lib/auth/policy/rbac";
+import { shouldUseSecureCookies } from "@/lib/auth/session/cookie-security";
+import { verifySessionToken } from "@/lib/auth/session/session";
 import { AUTH_COOKIE_NAME } from "@/lib/config/constants";
 import { isFeatureEnabled } from "@/lib/config/feature-flags";
 import { findFeatureByPath } from "@/lib/config/feature-registry";
@@ -13,6 +13,14 @@ import {
   setRequestIdHeader
 } from "@/lib/observability/request-id";
 
+/**
+ * Request proxy for route protection and request tracing.
+ *
+ * Why this file exists:
+ * - Next.js runs this proxy before matched routes.
+ * - We centralize auth redirects, RBAC checks, feature flag gates, and request-id propagation here.
+ * - It covers app pages and API routes listed in `config.matcher`.
+ */
 const protectedRoutes = ["/dashboard", "/projects", "/tasks", "/ecommerce", "/billing", "/users"];
 const authRoutes = ["/login", "/register"];
 
