@@ -8,7 +8,7 @@ import { useTasks } from "@/modules/task/hooks/use-tasks.hook";
 
 export function TaskList() {
   const t = useTranslations("tasks");
-  const { tasks, isLoading, isError } = useTasks();
+  const { tasks, isLoading, isError, status, setStatus, updateTaskStatus, isMutating } = useTasks();
 
   if (isLoading) {
     return <Skeleton lines={4} />;
@@ -24,6 +24,20 @@ export function TaskList() {
 
   return (
     <div className="stack">
+      <div className="card">
+        <select
+          value={status}
+          onChange={(event) =>
+            setStatus(event.target.value as "all" | "todo" | "in-progress" | "done")
+          }
+          className="input"
+        >
+          <option value="all">All statuses</option>
+          <option value="todo">Todo</option>
+          <option value="in-progress">In progress</option>
+          <option value="done">Done</option>
+        </select>
+      </div>
       {tasks.map((task) => (
         <article key={task.id} className="card">
           <h3 className="card-title text-title-xs">{task.title}</h3>
@@ -33,7 +47,24 @@ export function TaskList() {
           <p className="help-text">
             {t("priority")}: {task.priority}
           </p>
-          <span className="badge">{task.status}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span className="badge">{task.status}</span>
+            <select
+              value={task.status}
+              disabled={isMutating}
+              onChange={async (event) => {
+                await updateTaskStatus({
+                  id: task.id,
+                  nextStatus: event.target.value as "todo" | "in-progress" | "done"
+                });
+              }}
+              className="input"
+            >
+              <option value="todo">Todo</option>
+              <option value="in-progress">In progress</option>
+              <option value="done">Done</option>
+            </select>
+          </div>
         </article>
       ))}
     </div>

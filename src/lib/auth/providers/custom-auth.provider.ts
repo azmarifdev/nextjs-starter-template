@@ -3,6 +3,8 @@ import type { AuthPayload, AuthResponse } from "@/modules/auth/auth.types";
 import { apiClient } from "@/services/apiClient";
 import type { User } from "@/types/user";
 
+// Client-side adapter for custom auth endpoints.
+// These calls target an external backend by default, or internal auth routes when explicitly configured.
 export const customAuthProvider = {
   login(payload: AuthPayload): Promise<AuthResponse> {
     return apiClient.post<AuthResponse, AuthPayload>(

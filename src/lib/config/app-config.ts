@@ -5,6 +5,7 @@ export type ApiMode = "rest" | "graphql";
 export type BackendMode = "external" | "internal";
 export type DbProvider = "mongo" | "postgres";
 export type AuthProvider = "custom" | "nextauth";
+export type ProfileMode = "starter" | "saas" | "enterprise";
 
 interface FeatureConfig {
   ecommerce: boolean;
@@ -22,6 +23,8 @@ export interface AppConfig {
   backendMode: BackendMode;
   dbProvider: DbProvider;
   authProvider: AuthProvider;
+  profile: ProfileMode;
+  demoData: boolean;
   features: FeatureConfig;
   auth: AuthConfig;
 }
@@ -50,11 +53,21 @@ function parseAuthProvider(value: string | undefined): AuthProvider {
   return value === "nextauth" ? "nextauth" : "custom";
 }
 
+function parseProfile(value: string | undefined): ProfileMode {
+  if (value === "saas" || value === "enterprise") {
+    return value;
+  }
+
+  return "starter";
+}
+
 export const appConfig: AppConfig = {
   apiMode: parseApiMode(process.env.NEXT_PUBLIC_API_MODE),
   backendMode: parseBackendMode(process.env.NEXT_PUBLIC_BACKEND_MODE),
   dbProvider: parseDbProvider(process.env.NEXT_PUBLIC_DB_PROVIDER),
   authProvider: parseAuthProvider(process.env.NEXT_PUBLIC_AUTH_PROVIDER),
+  profile: parseProfile(process.env.NEXT_PUBLIC_PROFILE),
+  demoData: parseBoolean(process.env.NEXT_PUBLIC_DEMO_DATA, false),
   features: {
     ecommerce: parseBoolean(process.env.NEXT_PUBLIC_FEATURE_ECOMMERCE, true),
     billing: parseBoolean(process.env.NEXT_PUBLIC_FEATURE_BILLING, true),

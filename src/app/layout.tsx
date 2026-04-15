@@ -21,6 +21,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
     <html lang={locale} suppressHydrationWarning>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
+          {/* Global providers are mounted once through AppProviders. */}
           <AppProviders>{children}</AppProviders>
         </NextIntlClientProvider>
       </body>

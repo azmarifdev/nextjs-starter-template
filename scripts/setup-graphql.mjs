@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { copyTemplate, ensureEnvLocal, getProjectRoot, setEnvValue } from "./setup-utils.mjs";
+import { copyTemplate, ensureEnvLocal, getProjectRoot, setEnvValue } from "./setup-shared.mjs";
 
 const rootDir = getProjectRoot(import.meta.url);
 const envLocalPath = await ensureEnvLocal(rootDir);

@@ -2,6 +2,7 @@ import axios from "axios";
 
 import { assertExternalApiBaseUrlConfigured, resolveApiEndpoint } from "@/lib/config/runtime";
 import { ApiClientError } from "@/lib/errors/api-error";
+import { measureAsync } from "@/lib/observability/performance";
 import type { ApiResponse } from "@/types/api";
 
 const restClient = axios.create({
@@ -42,8 +43,14 @@ restClient.interceptors.response.use(
 export async function restGet<T>(path: string): Promise<ApiResponse<T>> {
   assertExternalApiBaseUrlConfigured();
   const endpoint = resolveApiEndpoint(path);
-  const { data } = await restClient.get<ApiResponse<T>>(endpoint);
-  return data;
+  return measureAsync(
+    "rest:get",
+    async () => {
+      const { data } = await restClient.get<ApiResponse<T>>(endpoint);
+      return data;
+    },
+    { endpoint, path }
+  );
 }
 
 export async function restPost<T, TPayload = unknown>(
@@ -52,6 +59,12 @@ export async function restPost<T, TPayload = unknown>(
 ): Promise<ApiResponse<T>> {
   assertExternalApiBaseUrlConfigured();
   const endpoint = resolveApiEndpoint(path);
-  const { data } = await restClient.post<ApiResponse<T>>(endpoint, payload);
-  return data;
+  return measureAsync(
+    "rest:post",
+    async () => {
+      const { data } = await restClient.post<ApiResponse<T>>(endpoint, payload);
+      return data;
+    },
+    { endpoint, path }
+  );
 }

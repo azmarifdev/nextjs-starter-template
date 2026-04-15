@@ -17,3 +17,5 @@ flowchart LR
 
 - `proxy.ts` enforces route auth checks, RBAC, feature gates, and request-id propagation.
 - Internal `app/api/*` handlers are reserved for auth/webhook concerns.
+- `app/api/v1/auth/*` exists for internal auth, local fallback, and demo/testing scenarios.
+- External backend integration remains the default operating model.

@@ -17,6 +17,10 @@ const appName = z.preprocess(
   (value) => (value === "" || value == null ? undefined : value),
   z.string().min(1).default("Nextjs Starter Template")
 );
+const optionalProfile = z.preprocess(
+  (value) => (value === "" || value == null ? undefined : value),
+  z.enum(["starter", "saas", "enterprise"]).optional()
+);
 
 export const env = createEnv({
   server: {
@@ -38,6 +42,8 @@ export const env = createEnv({
     NEXT_PUBLIC_BACKEND_MODE: z.enum(["external", "internal"]).default("external"),
     NEXT_PUBLIC_DB_PROVIDER: z.enum(["mongo", "postgres"]).default("mongo"),
     NEXT_PUBLIC_AUTH_PROVIDER: z.enum(["custom", "nextauth"]).default("custom"),
+    NEXT_PUBLIC_PROFILE: optionalProfile,
+    NEXT_PUBLIC_DEMO_DATA: optionalBooleanString,
     NEXT_PUBLIC_FEATURE_ECOMMERCE: optionalBooleanString,
     NEXT_PUBLIC_FEATURE_BILLING: optionalBooleanString,
     NEXT_PUBLIC_FEATURE_ADMIN: optionalBooleanString
@@ -59,6 +65,8 @@ export const env = createEnv({
     NEXT_PUBLIC_BACKEND_MODE: process.env.NEXT_PUBLIC_BACKEND_MODE,
     NEXT_PUBLIC_DB_PROVIDER: process.env.NEXT_PUBLIC_DB_PROVIDER,
     NEXT_PUBLIC_AUTH_PROVIDER: process.env.NEXT_PUBLIC_AUTH_PROVIDER,
+    NEXT_PUBLIC_PROFILE: process.env.NEXT_PUBLIC_PROFILE,
+    NEXT_PUBLIC_DEMO_DATA: process.env.NEXT_PUBLIC_DEMO_DATA,
     NEXT_PUBLIC_FEATURE_ECOMMERCE: process.env.NEXT_PUBLIC_FEATURE_ECOMMERCE,
     NEXT_PUBLIC_FEATURE_BILLING: process.env.NEXT_PUBLIC_FEATURE_BILLING,
     NEXT_PUBLIC_FEATURE_ADMIN: process.env.NEXT_PUBLIC_FEATURE_ADMIN

@@ -7,6 +7,7 @@ let validated = false;
 function collectErrors(): string[] {
   const errors: string[] = [];
 
+  // Fail fast when runtime mode selection does not match a supported profile.
   const supportedCombination = findSupportedCombination({
     backendMode: appConfig.backendMode,
     authProvider: appConfig.authProvider,
@@ -60,6 +61,7 @@ function collectErrors(): string[] {
 }
 
 export function validateRuntimeConfig(): void {
+  // Guard once per runtime boot (except tests) to keep request path lightweight.
   if (validated || process.env.NODE_ENV === "test") {
     return;
   }

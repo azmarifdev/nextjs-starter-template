@@ -2,7 +2,7 @@ import { readdir, copyFile, access } from "node:fs/promises";
 import { constants } from "node:fs";
 import path from "node:path";
 
-import { ensureDirectory, getProjectRoot } from "./setup-utils.mjs";
+import { ensureDirectory, getProjectRoot } from "./setup-shared.mjs";
 
 const rootDir = getProjectRoot(import.meta.url);
 const workflowsDir = path.join(rootDir, ".github", "workflows");

@@ -1,0 +1,6 @@
+{
+  "generatedAt": "2026-04-15T17:03:50.154Z",
+  "users": ["admin@example.com", "pm@example.com", "eng@example.com"],
+  "password": "secret123",
+  "notes": "Demo auth works only when ALLOW_DEMO_AUTH=true."
+}

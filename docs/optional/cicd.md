@@ -1,5 +1,11 @@
 # Optional: CI/CD Setup
 
+CI/CD strategy:
+
+- Default workflows are intentionally minimal for low-friction onboarding.
+- Advanced workflows are intentionally optional to avoid overwhelming new teams.
+- Production teams can progressively enable only the automation they need.
+
 ## Default (Beginner-Friendly)
 
 Keep only these workflows in `.github/workflows/`:

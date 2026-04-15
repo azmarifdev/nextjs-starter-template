@@ -111,6 +111,8 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
+  // We intentionally include `/api/:path*` so request-id propagation and runtime guardrails
+  // apply consistently to internal auth handlers and any future internal endpoints.
   matcher: [
     "/dashboard/:path*",
     "/projects/:path*",

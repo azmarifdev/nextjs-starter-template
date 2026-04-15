@@ -1,56 +1,49 @@
 # Optional Features
 
-Use optional features when you need more than the default beginner profile.
+Use optional features when you need more than the default starter experience.
 
-## 1) PostgreSQL
+Defaults:
 
-Run:
+- MongoDB is the default data profile.
+- External backend is the default integration model.
+- Minimal CI is the default pipeline model.
+
+## PostgreSQL (Drizzle)
 
 ```bash
 pnpm setup:postgres
 ```
 
-Manual path:
+- Updates `.env.local`
+- Enables postgres profile keys
+- Copies template examples
 
-- Read `docs/optional/postgresql.md`
-- Copy template values from `docs/optional/templates/postgres.env.example`
+Guide: `docs/optional/postgresql.md`
 
-## 2) GraphQL
-
-Run:
+## GraphQL
 
 ```bash
 pnpm setup:graphql
 ```
 
-Manual path:
+- Updates `.env.local`
+- Enables GraphQL client mode
+- Copies GraphQL template and example query
 
-- Read `docs/optional/graphql.md`
-- Copy template values from `docs/optional/templates/graphql.env.example`
-- Example query: `docs/optional/templates/graphql-query.example.ts`
+Guide: `docs/optional/graphql.md`
 
-## 3) CI/CD
-
-Run minimal workflow setup:
+## CI/CD
 
 ```bash
 pnpm setup:ci
-```
-
-Enable advanced automation:
-
-```bash
 pnpm setup:ci -- --advanced
 ```
 
-Copy selected workflow templates only:
+Selected templates:
 
 ```bash
 pnpm setup:ci -- --base-files=ci.yml,codeql.yml
 pnpm setup:ci -- --advanced --advanced-files=release-please.yml,pr-title.yml
 ```
 
-Manual path:
-
-- Copy files from `docs/optional/workflows/base/` and `docs/optional/workflows/advanced/` to `.github/workflows/`
-- Read `docs/optional/cicd.md`
+Guide: `docs/optional/cicd.md`

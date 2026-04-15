@@ -9,6 +9,8 @@ import { SessionProvider } from "@/providers/session.provider";
 import { ThemeProvider } from "@/providers/theme.provider";
 import { ToastProvider } from "@/providers/toast.provider";
 
+// Single provider entrypoint used by root layout.
+// Keep global providers composed here to avoid wrapper sprawl across route files.
 export function AppProviders({ children }: { children: ReactNode }): ReactNode {
   return (
     <SessionProvider>

@@ -5,6 +5,8 @@ import { getSession, signIn, signOut } from "next-auth/react";
 import type { AuthPayload, AuthResponse } from "@/modules/auth/auth.types";
 import type { User } from "@/types/user";
 
+// Client-side adapter for NextAuth session APIs.
+// Kept behind the same AuthProvider interface to avoid feature-layer branching.
 function mapSessionUser(sessionUser: {
   id?: string | null;
   name?: string | null;

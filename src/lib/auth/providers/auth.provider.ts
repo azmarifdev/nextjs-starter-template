@@ -12,6 +12,8 @@ export interface AuthProvider {
   refreshToken(): Promise<{ refreshed: boolean }>;
 }
 
+// Single provider contract used by UI/hooks.
+// `custom` is the default; `nextauth` is opt-in via config.
 const providers: Record<typeof appConfig.authProvider, AuthProvider> = {
   custom: customAuthProvider,
   nextauth: nextAuthProvider

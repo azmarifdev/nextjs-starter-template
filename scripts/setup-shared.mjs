@@ -16,18 +16,25 @@ export async function ensureDirectory(dirPath) {
 }
 
 export async function ensureEnvLocal(rootDir) {
+  const envPath = path.join(rootDir, ".env");
   const envLocalPath = path.join(rootDir, ".env.local");
-  if (await exists(envLocalPath)) {
-    return envLocalPath;
-  }
-
   const envExamplePath = path.join(rootDir, ".env.example");
   const source = (await exists(envExamplePath)) ? envExamplePath : null;
 
-  if (source) {
-    await copyFile(source, envLocalPath);
-  } else {
-    await writeFile(envLocalPath, "", "utf8");
+  if (!(await exists(envPath))) {
+    if (source) {
+      await copyFile(source, envPath);
+    } else {
+      await writeFile(envPath, "", "utf8");
+    }
+  }
+
+  if (!(await exists(envLocalPath))) {
+    if (source) {
+      await copyFile(source, envLocalPath);
+    } else {
+      await writeFile(envLocalPath, "", "utf8");
+    }
   }
 
   return envLocalPath;

@@ -4,13 +4,19 @@
 
 Simple by default, powerful when needed.
 
-## Boundaries
+## Core Boundaries
 
-- `src/app/api/*`: internal route handlers only (auth and webhook-style endpoints)
+- `src/app/api/*`: internal route handlers only (auth/webhooks/platform concerns)
 - `src/services/rest/*`: REST transport client implementation
 - `src/services/graphql/*`: GraphQL transport client implementation
-- `src/modules/*`: domain features and orchestration
-- `src/lib/auth/*`: auth internals (providers/session/repository/policy)
+- `src/modules/*`: feature/domain orchestration
+- `src/lib/*`: platform internals (config, auth, security, observability)
+
+This starter is external-backend-first. Internal `src/app/api/v1/auth/*` routes are intentionally scoped to:
+
+- internal auth flows
+- local fallback mode
+- demo/testing scenarios
 
 ## Data Flow
 
@@ -18,20 +24,39 @@ Simple by default, powerful when needed.
 
 UI does not call transport clients directly.
 
+## Profile System
+
+Runtime profiles are environment-driven:
+
+- `starter`
+- `saas`
+- `enterprise`
+
+Switch with:
+
+```bash
+pnpm use:profile <starter|saas|enterprise>
+```
+
 ## Auth Strategy
 
 - Default: custom auth provider
 - Optional: NextAuth provider
-- Runtime provider switch uses `src/lib/auth/providers/auth.provider.ts`
+- Provider abstraction: `src/lib/auth/providers/auth.provider.ts`
 
-## API Strategy
+## Security & Guardrails
 
-- Default mode is external backend.
-- Internal handlers are intentionally limited to auth flows.
-- REST/GraphQL selection is done by `NEXT_PUBLIC_API_MODE`.
+- Runtime config validation fails fast for unsupported combinations.
+- Rate-limit, origin checks, secure cookies, and auth session guards are enforced in auth routes.
+- Demo auth is available only when `ALLOW_DEMO_AUTH=true`.
 
-## Runtime Guardrails
+## Observability
 
-Unsupported combinations fail fast in runtime config validation.
+- Structured logs: `src/lib/observability/logger.ts`
+- Request tracing: `src/lib/observability/tracing.ts`
+- Performance metrics helper: `src/lib/observability/performance.ts`
 
-See `docs/config-combinations.md`.
+## Provider Composition
+
+- Global providers are composed once in `src/providers/index.tsx`.
+- Root layout uses only `AppProviders` as the single entry wrapper.

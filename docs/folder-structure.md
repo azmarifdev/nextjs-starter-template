@@ -63,7 +63,7 @@ src/
 ## Boundary Summary
 
 - `modules` call `services`
-- `services` call transport clients
+- `services` is the transport-facing client layer (REST/GraphQL communication from frontend)
 - `components` stay feature-agnostic
 - `app/api` stays internal-only for auth/webhook concerns
 - `lib` contains platform internals

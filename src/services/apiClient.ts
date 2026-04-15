@@ -4,6 +4,8 @@ import { graphqlRequest } from "@/services/graphql/client";
 import { restGet, restPost } from "@/services/rest/client";
 import type { ApiResponse } from "@/types/api";
 
+// Transport orchestrator for client-side API communication.
+// This is not backend business logic; it selects REST/GraphQL transport based on runtime config.
 function unwrapGraphqlData<T>(payload: unknown): T {
   if (payload == null) {
     throw new ApiClientError("GraphQL response returned no data");
